@@ -1,0 +1,16 @@
+{
+  "generator-jhipster": {
+    "appsFolders": ["main"],
+    "directoryPath": "../",
+    "serviceDiscoveryType": "eureka",
+    "jwtSecretKey": "NTJkNmI3NzkxZTJhMTgzOTQ4YjQyNGIwODdlODMwYzM3ZGI1OWNlMWU0MjQzNmIxYjkwYWQ3ODgzODM0ZTNlYjY4ZmQwMTRiNDFjMDY3MzgxZjIzZjMxYTYzOGI0YTk1ODY4YQ==",
+    "dockerRepositoryName": "pp1blts",
+    "dockerPushCommand": "docker push",
+    "kubernetesNamespace": "default",
+    "kubernetesServiceType": "LoadBalancer",
+    "kubernetesUseDynamicStorage": false,
+    "ingressDomain": "",
+    "monitoring": "no",
+    "istio": false
+  }
+}

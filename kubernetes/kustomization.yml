@@ -1,0 +1,13 @@
+commonLabels:
+  app.kubernetes.io/genereted-by: JHipster
+
+resources:
+  # Individual apps
+  - main/main-deployment.yml
+  - main/main-service.yml
+  - main/main-postgresql.yml
+  # service discovery eureka/consul
+  - registry/jhipster-registry.yml
+  - registry/application-configmap.yml
+
+patchesJson6902:
