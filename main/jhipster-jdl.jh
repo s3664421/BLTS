@@ -1,0 +1,47 @@
+entity Plant {
+    name String required,
+    description String,
+    location String required,  
+}
+
+entity Requirments{
+
+	tempLow Long,
+    tempHigh Long,
+    humidityLow Long,
+    humidityHigh Long,
+    lightLow Long,
+    lightHigh Long,
+    moistureLow Long,
+    moistureHigh Long
+
+}
+entity Sensor{
+    sensorNo String required
+    description String
+}
+entity PlantCase{
+	timeOpened Instant
+    timeClosed Instant,
+    status String,
+    open Boolean
+}
+entity DataReading {
+	time Instant required,
+    temp Long required,
+    humidity Long required,
+    light Long required,
+    moisture Long required
+}
+
+relationship ManyToOne {
+    Sensor{user(login)} to User,
+    DataReading{sensor(sensorNo)} to Sensor,
+    PlantCase{plant} to Plant
+}
+relationship OneToOne {
+	Plant{sensor} to Sensor,
+    Requirments{plant} to Plant,
+}
+
+paginate Plant with pagination
