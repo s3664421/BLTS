@@ -1,0 +1,58 @@
+{
+    "name": "Requirments",
+    "fields": [
+        {
+            "fieldName": "tempLow",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "tempHigh",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "humidityLow",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "humidityHigh",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "lightLow",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "lightHigh",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "moistureLow",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "moistureHigh",
+            "fieldType": "Long"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "plant",
+            "otherEntityRelationshipName": "requirments",
+            "relationshipName": "plant",
+            "otherEntityField": "id",
+            "ownerSide": true
+        }
+    ],
+    "changelogDate": "20200320113800",
+    "entityTableName": "requirments",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

@@ -1,0 +1,41 @@
+{
+    "name": "PlantCase",
+    "fields": [
+        {
+            "fieldName": "timeOpened",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "timeClosed",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "open",
+            "fieldType": "Boolean"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "plant",
+            "otherEntityRelationshipName": "plantCase",
+            "relationshipName": "plant",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20200320114000",
+    "entityTableName": "plant_case",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}
