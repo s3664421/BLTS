@@ -45,6 +45,13 @@ public class CacheConfiguration {
             createCache(cm, com.smartplant.app.domain.User.class.getName());
             createCache(cm, com.smartplant.app.domain.Authority.class.getName());
             createCache(cm, com.smartplant.app.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.smartplant.app.domain.Plant.class.getName());
+            createCache(cm, com.smartplant.app.domain.Plant.class.getName() + ".plantcases");
+            createCache(cm, com.smartplant.app.domain.PlantThresholds.class.getName());
+            createCache(cm, com.smartplant.app.domain.DataReading.class.getName());
+            createCache(cm, com.smartplant.app.domain.PlantCase.class.getName());
+            createCache(cm, com.smartplant.app.domain.Customer.class.getName());
+            createCache(cm, com.smartplant.app.domain.Customer.class.getName() + ".plants");
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -1,0 +1,89 @@
+entity Plant {
+	name String required,
+    description String,
+    location String required,
+    sensorID String required
+}
+
+entity PlantThresholds {
+	tempLow Float required,
+    tempHigh Float required,
+    humidityLow Float required,
+    humidityHigh Float required,
+    lightLow Float required,
+    lightHigh Float required,
+    moistureLow Float required,
+    moistureHigh Float required
+}
+
+entity DataReading {
+	time Instant required,
+    temp Float required,
+    humidity Float required,
+    light Float required,
+    moisture Float required,
+}
+
+entity PlantCase {
+	needsAttention AttentionItem,
+    timeOpened Instant,
+    timeClosed Instant,
+    status CaseStatus,
+    caseNotes String
+}
+
+entity Customer {
+	address String required,
+    postcode Integer required,
+    city String required,
+    state State required,
+    phoneNo String required
+}
+
+enum CaseStatus {
+	OPEN,
+	ASSIGNED,
+    CLOSED
+}
+
+enum State {
+	VIC,
+    TAS,
+    NSW,
+    WA,
+    QLD,
+    NT,
+    ACT,
+    SA
+}
+
+enum AttentionItem {
+	TEMP_LOW, 
+    TEMP_HIGH, 
+    HUMIDITY_LOW, 
+    HUMIDITY_HIGH, 
+    LIGHT_LOW,
+    LIGHT_HIGH,
+    MOISTURE_LOW,
+    MOISTURE_HIGH,
+    NO_DATA
+}
+
+relationship OneToMany {
+
+    Plant{plantcase} to PlantCase{plant},
+    Customer{plant} to Plant{customer}
+}
+
+relationship ManyToOne {
+	PlantCase{user(login)} to User,
+    DataReading{plant(sensorID)} to Plant
+}
+
+relationship OneToOne {
+	Plant{plantthresholds} to PlantThresholds{plant},
+    Customer{user(login)} to User{customer}
+}
+
+paginate Plant with pagination
+paginate PlantCase with pagination

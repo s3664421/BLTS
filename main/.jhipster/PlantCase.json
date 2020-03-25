@@ -1,0 +1,54 @@
+{
+    "name": "PlantCase",
+    "fields": [
+        {
+            "fieldName": "needsAttention",
+            "fieldType": "AttentionItem",
+            "fieldValues": "TEMP_LOW,TEMP_HIGH,HUMIDITY_LOW,HUMIDITY_HIGH,LIGHT_LOW,LIGHT_HIGH,MOISTURE_LOW,MOISTURE_HIGH,NO_DATA"
+        },
+        {
+            "fieldName": "timeOpened",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "timeClosed",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "CaseStatus",
+            "fieldValues": "OPEN,ASSIGNED,CLOSED"
+        },
+        {
+            "fieldName": "caseNotes",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "user",
+            "otherEntityRelationshipName": "plantCase",
+            "relationshipName": "user",
+            "otherEntityField": "login"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "plant",
+            "otherEntityRelationshipName": "plantcase",
+            "relationshipName": "plant",
+            "otherEntityField": "id"
+        }
+    ],
+    "changelogDate": "20200325031900",
+    "entityTableName": "plant_case",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "embedded": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}
