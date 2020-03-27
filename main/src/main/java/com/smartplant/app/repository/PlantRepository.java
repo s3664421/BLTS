@@ -14,5 +14,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PlantRepository extends JpaRepository<Plant, Long> {
 
-	Optional<Plant> findBySensorId(String sensorID);
+	Optional<Plant> findBySensorID(String sensorID);
 }

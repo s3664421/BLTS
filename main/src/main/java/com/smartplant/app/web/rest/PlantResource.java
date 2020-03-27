@@ -134,8 +134,8 @@ public class PlantResource {
      */
     @GetMapping("/plants/{sensorid}")
     public Plant getPlantBySensorId(@PathVariable String sensorID) {
-        log.debug("REST request to get by sensor ID Plant : {}", sensorID);
-        Optional<Plant> plant = plantRepository.findBySensorId(sensorID);
+        log.debug("REST request to get Plant with sensor ID : {}", sensorID);
+        Optional<Plant> plant = plantRepository.findBySensorID(sensorID);
         if (plant.isPresent()) {
         	return plant.get();
         } else {

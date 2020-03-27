@@ -61,12 +61,13 @@ public class DataReadingResource {
     	DataReading dataReading = new DataReading();
     	try {
 			JsonNode jsonNode = mapper.readTree(jsonDataReading);
+			String sensorIDString = jsonNode.get("sensorID").toString().replace("\"", "");
 	    	dataReading.time(Instant.now())
-	    		.temp(jsonNode.get("temp").floatValue())
-	    		.humidity(jsonNode.get("humidity").floatValue())
-	    		.light(jsonNode.get("light").floatValue())
-	    		.moisture(jsonNode.get("moisture").floatValue())
-	    		.plant(plantRepository.findBySensorId(jsonNode.get("sensorID").toString()).get());
+	    		.temp((float) jsonNode.get("temp").asDouble())
+	    		.humidity((float) jsonNode.get("humidity").asDouble())
+	    		.light((float) jsonNode.get("light").asDouble())
+	    		.moisture((float) jsonNode.get("moisture").asDouble())
+	    		.plant(plantRepository.findBySensorID(sensorIDString).get());
 	        log.debug("REST request to save DataReading : {}", dataReading);
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
