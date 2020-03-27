@@ -1,13 +1,18 @@
 package com.smartplant.app.web.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.*;
 import com.smartplant.app.domain.DataReading;
+import com.smartplant.app.domain.Plant;
 import com.smartplant.app.repository.DataReadingRepository;
+import com.smartplant.app.repository.PlantRepository;
 import com.smartplant.app.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +40,8 @@ public class DataReadingResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    @Autowired
+	private PlantRepository plantRepository;
     private final DataReadingRepository dataReadingRepository;
 
     public DataReadingResource(DataReadingRepository dataReadingRepository) {
@@ -48,8 +56,22 @@ public class DataReadingResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/data-readings")
-    public ResponseEntity<DataReading> createDataReading(@Valid @RequestBody DataReading dataReading) throws URISyntaxException {
-        log.debug("REST request to save DataReading : {}", dataReading);
+    public ResponseEntity<DataReading> createDataReading(@Valid @RequestBody String jsonDataReading) throws URISyntaxException {
+    	ObjectMapper mapper = new ObjectMapper();
+    	DataReading dataReading = new DataReading();
+    	try {
+			JsonNode jsonNode = mapper.readTree(jsonDataReading);
+	    	dataReading.time(Instant.now())
+	    		.temp(jsonNode.get("temp").floatValue())
+	    		.humidity(jsonNode.get("humidity").floatValue())
+	    		.light(jsonNode.get("light").floatValue())
+	    		.moisture(jsonNode.get("moisture").floatValue())
+	    		.plant(plantRepository.findBySensorId(jsonNode.get("sensorID").toString()).get());
+	        log.debug("REST request to save DataReading : {}", dataReading);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         if (dataReading.getId() != null) {
             throw new BadRequestAlertException("A new dataReading cannot already have an ID", ENTITY_NAME, "idexists");
         }

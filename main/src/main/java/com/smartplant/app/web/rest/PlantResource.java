@@ -125,4 +125,21 @@ public class PlantResource {
         plantRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
+    
+    /**
+     * {@code GET  /plants/:sensorID} : get the "sensorID" plant.
+     *
+     * @param id the sensor id of the plant to retrieve.
+     * @return the Plant object with the specified sensor ID.
+     */
+    @GetMapping("/plants/{sensorid}")
+    public Plant getPlantBySensorId(@PathVariable String sensorID) {
+        log.debug("REST request to get by sensor ID Plant : {}", sensorID);
+        Optional<Plant> plant = plantRepository.findBySensorId(sensorID);
+        if (plant.isPresent()) {
+        	return plant.get();
+        } else {
+        	return null;
+        }
+    }
 }
