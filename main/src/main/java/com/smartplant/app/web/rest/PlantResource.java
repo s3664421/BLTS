@@ -132,7 +132,7 @@ public class PlantResource {
      * @param id the sensor id of the plant to retrieve.
      * @return the Plant object with the specified sensor ID.
      */
-    @GetMapping("/plants/{sensorid}")
+    @GetMapping("/plants/{sensorid}/{id}")
     public Plant getPlantBySensorId(@PathVariable String sensorID) {
         log.debug("REST request to get Plant with sensor ID : {}", sensorID);
         Optional<Plant> plant = plantRepository.findBySensorID(sensorID);

@@ -29,6 +29,7 @@ export type PlantState = Readonly<typeof initialState>;
 
 // Reducer
 
+// Indication to whether specific action (from ACTION_TYPES) succeed's or fail's
 export default (state: PlantState = initialState, action): PlantState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_PLANT_LIST):
@@ -101,6 +102,7 @@ const apiUrl = 'api/plants';
 
 // Actions
 
+// Obtain list of all plants
 export const getEntities: ICrudGetAllAction<IPlant> = (page, size, sort) => {
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
   return {
@@ -109,6 +111,7 @@ export const getEntities: ICrudGetAllAction<IPlant> = (page, size, sort) => {
   };
 };
 
+// 'View' specific plant
 export const getEntity: ICrudGetAction<IPlant> = id => {
   const requestUrl = `${apiUrl}/${id}`;
   return {
@@ -117,6 +120,18 @@ export const getEntity: ICrudGetAction<IPlant> = id => {
   };
 };
 
+// Obtain dataReadings for specific plant
+/*
+export const getAllDataReading: ICrudGetAction<IPlant> = id => {
+  const requestUrl = `${apiUrl}/${id}`;
+  return {
+    type: ACTION_TYPES.FETCH_PLANT,
+    payload: axios.get<IPlant>(requestUrl)
+  };
+};
+*/
+
+// Action to create a plant
 export const createEntity: ICrudPutAction<IPlant> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_PLANT,
@@ -126,6 +141,7 @@ export const createEntity: ICrudPutAction<IPlant> = entity => async dispatch => 
   return result;
 };
 
+// Action to update the plant
 export const updateEntity: ICrudPutAction<IPlant> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.UPDATE_PLANT,
@@ -134,6 +150,7 @@ export const updateEntity: ICrudPutAction<IPlant> = entity => async dispatch => 
   return result;
 };
 
+// Action to delete a specific plant
 export const deleteEntity: ICrudDeleteAction<IPlant> = id => async dispatch => {
   const requestUrl = `${apiUrl}/${id}`;
   const result = await dispatch({
