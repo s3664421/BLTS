@@ -17,5 +17,5 @@ import org.springframework.stereotype.Repository;
 public interface DataReadingRepository extends JpaRepository<DataReading, Long> {
 
 	@Query(value="SELECT * FROM data_reading dr WHERE dr.plant_id = ?1", nativeQuery=true)
-    Optional<List<DataReading>> findAllByPlantID(String PlantID);
+    Optional<List<DataReading>> findAllByPlantID(Long PlantID);
 }
