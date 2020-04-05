@@ -7,10 +7,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './plant.reducer';
+
+import { getEntity as getDataReading } from 'app/entities/data-reading/data-reading.reducer';
+
 import { IPlant } from 'app/shared/model/plant.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
 export interface IPlantDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export interface IDataReadingDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const PlantDetail = (props: IPlantDetailProps) => {
   useEffect(() => {
@@ -53,10 +57,21 @@ export const PlantDetail = (props: IPlantDetailProps) => {
         <Button tag={Link} to={`/plant/${plantEntity.id}/edit`} replace color="primary">
           <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
         </Button>
+        <h2>
+           -----------------------------------------------------------
+        </h2>
+        <h2>
+          {plantEntity.name} Data Readings
+        </h2>
+        <p>SensorID({plantEntity.sensorID})</p>
+        <dd>DISPLAY ALL DATA READINGS FOR THIS PLANT</dd>
       </Col>
     </Row>
   );
 };
+
+
+
 
 const mapStateToProps = ({ plant }: IRootState) => ({
   plantEntity: plant.entity
@@ -68,3 +83,14 @@ type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlantDetail);
+
+
+/*
+const dataMapStateToProps = ({ plant }: IRootState) => ({
+  plantEntity: plant.entity
+});
+const dataMapDispatchToProps = { getDataReading };
+
+type DataStateProps = ReturnType<typeof dataMapStateToProps>;
+type DataDispatchProps = typeof dataMapDispatchToProps;
+*/

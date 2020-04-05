@@ -139,4 +139,24 @@ public class DataReadingResource {
         dataReadingRepository.deleteById(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
+
+    @GetMapping("/data-readings/{sensorID}")
+    public ResponseEntity<List<DataReading>> getDataReadingBySensorId(@PathVariable String sensorID) {
+        log.debug("REST request to get dataReading with sensor ID : {}", sensorID);
+        Optional<DataReading> dataReading = dataReadingRepository.findBySensorID(sensorID);
+        if (dataReading.isPresent()) {
+        	return dataReading.getAllDataReadings();
+        } else {
+        	return null;
+        }
+    }
+    
+    /*
+    @GetMapping("/data-readings/{sensorID}")
+    public ResponseEntity<DataReading> getDataReading(@PathVariable String sensorID) {
+        //log.debug("REST request to get DataReading : {}", sensorID);
+        Optional<DataReading> dataReading = dataReadingRepository.findBySensorID(sensorID);
+        return ResponseUtil.wrapOrNotFound(dataReading);
+    }
+    */
 }

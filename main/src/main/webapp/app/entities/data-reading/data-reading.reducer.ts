@@ -112,6 +112,16 @@ export const getEntity: ICrudGetAction<IDataReading> = id => {
   };
 };
 
+/* BH: Getting data entity
+export const getDataEntity: ICrudGetAction<IDataReading> = id => {
+  const requestUrl = `${apiUrl}/${id}`;
+  return {
+    type: ACTION_TYPES.FETCH_DATAREADING,
+    payload: axios.get<IDataReading>(requestUrl)
+  };
+};
+*/
+
 export const createEntity: ICrudPutAction<IDataReading> = entity => async dispatch => {
   const result = await dispatch({
     type: ACTION_TYPES.CREATE_DATAREADING,
