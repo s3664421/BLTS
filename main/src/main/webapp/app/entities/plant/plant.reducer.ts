@@ -5,6 +5,7 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
 import { IPlant, defaultValue } from 'app/shared/model/plant.model';
+import { IDataReading } from 'app/shared/model/data-reading.model';
 
 export const ACTION_TYPES = {
   FETCH_PLANT_LIST: 'plant/FETCH_PLANT_LIST',
@@ -12,7 +13,8 @@ export const ACTION_TYPES = {
   CREATE_PLANT: 'plant/CREATE_PLANT',
   UPDATE_PLANT: 'plant/UPDATE_PLANT',
   DELETE_PLANT: 'plant/DELETE_PLANT',
-  RESET: 'plant/RESET'
+  RESET: 'plant/RESET',
+  FETCH_DATA_READINGS: 'plant/FETCH_DATA_READINGS'
 };
 
 const initialState = {
@@ -20,6 +22,7 @@ const initialState = {
   errorMessage: null,
   entities: [] as ReadonlyArray<IPlant>,
   entity: defaultValue,
+  dataReadings: [] as ReadonlyArray<IDataReading>,
   updating: false,
   totalItems: 0,
   updateSuccess: false
@@ -34,6 +37,7 @@ export default (state: PlantState = initialState, action): PlantState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_PLANT_LIST):
     case REQUEST(ACTION_TYPES.FETCH_PLANT):
+    case REQUEST(ACTION_TYPES.FETCH_DATA_READINGS):
       return {
         ...state,
         errorMessage: null,
@@ -54,6 +58,7 @@ export default (state: PlantState = initialState, action): PlantState => {
     case FAILURE(ACTION_TYPES.CREATE_PLANT):
     case FAILURE(ACTION_TYPES.UPDATE_PLANT):
     case FAILURE(ACTION_TYPES.DELETE_PLANT):
+    case FAILURE(ACTION_TYPES.FETCH_DATA_READINGS):
       return {
         ...state,
         loading: false,
@@ -89,6 +94,12 @@ export default (state: PlantState = initialState, action): PlantState => {
         updateSuccess: true,
         entity: {}
       };
+    case SUCCESS(ACTION_TYPES.FETCH_DATA_READINGS):
+      return {
+        ...state,
+        loading: false,
+        dataReadings: action.payload.data
+      };
     case ACTION_TYPES.RESET:
       return {
         ...initialState
@@ -99,6 +110,7 @@ export default (state: PlantState = initialState, action): PlantState => {
 };
 
 const apiUrl = 'api/plants';
+const dataReadingApiUrl = 'api/data-readings';
 
 // Actions
 
@@ -120,16 +132,14 @@ export const getEntity: ICrudGetAction<IPlant> = id => {
   };
 };
 
-// Obtain dataReadings for specific plant
-/*
-export const getAllDataReading: ICrudGetAction<IPlant> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
+// Obtain list of dataReadings for specific plant
+export const getAllDataReading: ICrudGetAction<IDataReading> = plantID => {
+  const requestUrl = `${dataReadingApiUrl}/sensor/${plantID}`;
   return {
-    type: ACTION_TYPES.FETCH_PLANT,
-    payload: axios.get<IPlant>(requestUrl)
+    type: ACTION_TYPES.FETCH_DATA_READINGS,
+    payload: axios.get<IDataReading>(requestUrl)
   };
 };
-*/
 
 // Action to create a plant
 export const createEntity: ICrudPutAction<IPlant> = entity => async dispatch => {

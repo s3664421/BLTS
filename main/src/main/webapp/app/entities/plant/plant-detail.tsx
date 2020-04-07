@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
-import { ICrudGetAction } from 'react-jhipster';
+import { Button, Row, Col, Table } from 'reactstrap';
+import { ICrudGetAction, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getEntity } from './plant.reducer';
-
-import { getEntity as getDataReading } from 'app/entities/data-reading/data-reading.reducer';
+import { getEntity, getAllDataReading } from './plant.reducer';
 
 import { IPlant } from 'app/shared/model/plant.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
@@ -19,12 +17,13 @@ export interface IDataReadingDetailProps extends StateProps, DispatchProps, Rout
 export const PlantDetail = (props: IPlantDetailProps) => {
   useEffect(() => {
     props.getEntity(props.match.params.id);
+    props.getAllDataReading(props.match.params.id);
   }, []);
 
-  const { plantEntity } = props;
+  const { plantEntity, dataReadings } = props;
   return (
     <Row>
-      <Col md="8">
+      <Col md="6">
         <h2>
           Plant [<b>{plantEntity.id}</b>]
         </h2>
@@ -57,14 +56,39 @@ export const PlantDetail = (props: IPlantDetailProps) => {
         <Button tag={Link} to={`/plant/${plantEntity.id}/edit`} replace color="primary">
           <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
         </Button>
-        <h2>
-           -----------------------------------------------------------
-        </h2>
-        <h2>
+      </Col>
+      <Col md="6">
+        <h4>
           {plantEntity.name} Data Readings
-        </h2>
-        <p>SensorID({plantEntity.sensorID})</p>
-        <dd>DISPLAY ALL DATA READINGS FOR THIS PLANT</dd>
+        </h4>\
+        {dataReadings && dataReadings.length > 0 ? (
+          <Table responsive>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Temp</th>
+                <th>Humidity</th>
+                <th>Light</th>
+                <th>Moisture</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {dataReadings.map((dataReading, i) => (
+                <tr key={`entity-${i}`}>
+                  <td>
+                    <TextFormat type="date" value={dataReading.time} format={APP_DATE_FORMAT} />
+                  </td>
+                  <td>{dataReading.temp}</td>
+                  <td>{dataReading.humidity}</td>
+                  <td>{dataReading.light}</td>
+                  <td>{dataReading.moisture}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>) : (
+          <div className="alert alert-warning">No Data Readings found</div>
+        )}
       </Col>
     </Row>
   );
@@ -74,23 +98,13 @@ export const PlantDetail = (props: IPlantDetailProps) => {
 
 
 const mapStateToProps = ({ plant }: IRootState) => ({
-  plantEntity: plant.entity
+  plantEntity: plant.entity,
+  dataReadings: plant.dataReadings
 });
 
-const mapDispatchToProps = { getEntity };
+const mapDispatchToProps = { getEntity, getAllDataReading };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlantDetail);
-
-
-/*
-const dataMapStateToProps = ({ plant }: IRootState) => ({
-  plantEntity: plant.entity
-});
-const dataMapDispatchToProps = { getDataReading };
-
-type DataStateProps = ReturnType<typeof dataMapStateToProps>;
-type DataDispatchProps = typeof dataMapDispatchToProps;
-*/

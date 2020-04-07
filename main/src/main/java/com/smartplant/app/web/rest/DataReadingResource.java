@@ -140,10 +140,9 @@ public class DataReadingResource {
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
     }
 
-    @GetMapping("data-readings/sensor/{sensorID}")
-    public ResponseEntity<List<DataReading>> getDataReadingByPlantId(@PathVariable String sensorID) {
-        log.debug("REST request to get dataReading with sensor ID : {}", sensorID);
-    	Long plantID = plantRepository.findBySensorID(sensorID).get().getId();
+    @GetMapping("data-readings/sensor/{plantID}")
+    public ResponseEntity<List<DataReading>> getDataReadingByPlantId(@PathVariable Long plantID) {
+        log.debug("REST request to get all dataReadings for plant with ID : {}", plantID);
         Optional<List<DataReading>> dataReading = dataReadingRepository.findAllByPlantID(plantID);
         return ResponseUtil.wrapOrNotFound(dataReading);
     }
