@@ -1,23 +1,26 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col } from 'reactstrap';
+import { Button, Row, Col, Table } from 'reactstrap';
 import { ICrudGetAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getEntity } from './customer.reducer';
+import { getEntity, getAllPlants } from './customer.reducer'; // Step 9: Import customer.reducer
+
 import { ICustomer } from 'app/shared/model/customer.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+// import plant from '../plant/plant';
 
 export interface ICustomerDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const CustomerDetail = (props: ICustomerDetailProps) => {
   useEffect(() => {
     props.getEntity(props.match.params.id);
+    props.getAllPlants(props.match.params.id); // Step 12: Can now use function
   }, []);
 
-  const { customerEntity } = props;
+  const { customerEntity, plant } = props;
   return (
     <Row>
       <Col md="8">
@@ -56,15 +59,39 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
           <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
         </Button>
       </Col>
+      <Col md="8">
+        <h4>
+          {customerEntity.id}: Customers plants
+        </h4>
+        {plant && plant.length > 0 ? (
+          <Table responsive>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {plant.map((plantReading, i) => (
+                <tr key={`entity-${i}`}>
+                  <td>{plantReading.name}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>) : (
+          <div className="alert alert-warning">No Data Found</div>
+        )}
+      </Col>
     </Row>
   );
 };
 
 const mapStateToProps = ({ customer }: IRootState) => ({
-  customerEntity: customer.entity
+  customerEntity: customer.entity,
+  plant: customer.plant // Step 10: add to 'mapStateToProps' to be able to use prop
 });
 
-const mapDispatchToProps = { getEntity };
+const mapDispatchToProps = { getEntity, getAllPlants}; // Step 11: add function here
 
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;

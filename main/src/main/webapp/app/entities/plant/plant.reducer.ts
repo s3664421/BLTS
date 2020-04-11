@@ -5,7 +5,7 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
 import { IPlant, defaultValue } from 'app/shared/model/plant.model';
-import { IDataReading } from 'app/shared/model/data-reading.model';
+import { IDataReading } from 'app/shared/model/data-reading.model'; // Import: The data reading model into plant reducer
 
 export const ACTION_TYPES = {
   FETCH_PLANT_LIST: 'plant/FETCH_PLANT_LIST',
@@ -14,9 +14,10 @@ export const ACTION_TYPES = {
   UPDATE_PLANT: 'plant/UPDATE_PLANT',
   DELETE_PLANT: 'plant/DELETE_PLANT',
   RESET: 'plant/RESET',
-  FETCH_DATA_READINGS: 'plant/FETCH_DATA_READINGS'
+  FETCH_DATA_READINGS: 'plant/FETCH_DATA_READINGS' // Have to create a new action type
 };
 
+// This state is all the variables we have on a plant page
 const initialState = {
   loading: false,
   errorMessage: null,
@@ -94,7 +95,7 @@ export default (state: PlantState = initialState, action): PlantState => {
         updateSuccess: true,
         entity: {}
       };
-    case SUCCESS(ACTION_TYPES.FETCH_DATA_READINGS):
+    case SUCCESS(ACTION_TYPES.FETCH_DATA_READINGS): // Success case is what actually gives you the data (this will modify state variable)
       return {
         ...state,
         loading: false,
@@ -110,7 +111,7 @@ export default (state: PlantState = initialState, action): PlantState => {
 };
 
 const apiUrl = 'api/plants';
-const dataReadingApiUrl = 'api/data-readings';
+const dataReadingApiUrl = 'api/data-readings'; // Hardcoded 'dataReadingApiUrl' here
 
 // Actions
 
@@ -132,7 +133,7 @@ export const getEntity: ICrudGetAction<IPlant> = id => {
   };
 };
 
-// Obtain list of dataReadings for specific plant
+// Obtain list of dataReadings for specific plant (Action type is generated from this function here)
 export const getAllDataReading: ICrudGetAction<IDataReading> = plantID => {
   const requestUrl = `${dataReadingApiUrl}/sensor/${plantID}`;
   return {

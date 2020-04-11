@@ -16,11 +16,11 @@ export interface IDataReadingDetailProps extends StateProps, DispatchProps, Rout
 
 export const PlantDetail = (props: IPlantDetailProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
-    props.getAllDataReading(props.match.params.id);
+    props.getEntity(props.match.params.id); 
+    props.getAllDataReading(props.match.params.id); 
   }, []);
 
-  const { plantEntity, dataReadings } = props;
+  const { plantEntity, dataReadings } = props; 
   return (
     <Row>
       <Col md="6">
@@ -60,7 +60,7 @@ export const PlantDetail = (props: IPlantDetailProps) => {
       <Col md="6">
         <h4>
           {plantEntity.name} Data Readings
-        </h4>\
+        </h4>
         {dataReadings && dataReadings.length > 0 ? (
           <Table responsive>
             <thead>
@@ -99,7 +99,7 @@ export const PlantDetail = (props: IPlantDetailProps) => {
 
 const mapStateToProps = ({ plant }: IRootState) => ({
   plantEntity: plant.entity,
-  dataReadings: plant.dataReadings
+  dataReadings: plant.dataReadings // Add any other REST calls here
 });
 
 const mapDispatchToProps = { getEntity, getAllDataReading };
