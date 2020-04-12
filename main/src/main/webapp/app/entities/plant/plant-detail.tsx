@@ -1,3 +1,4 @@
+/* eslint no-console: off */
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -11,6 +12,8 @@ import { getEntity, getAllDataReading } from './plant.reducer';
 import { IPlant } from 'app/shared/model/plant.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
+import { LineGraph } from 'app/shared/graphing/line-graph-gradient';
+
 export interface IPlantDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 export interface IDataReadingDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -21,9 +24,18 @@ export const PlantDetail = (props: IPlantDetailProps) => {
   }, []);
 
   const { plantEntity, dataReadings } = props;
+  const temps = [];
+
+  dataReadings.map((dataReading, i) => {
+    temps.push(
+    {"time": dataReading.time, 
+    "value": dataReading.temp}
+  )});
+  console.log("temps: ", temps);
+
   return (
     <Row>
-      <Col md="6">
+      <Col md="3">
         <h2>
           Plant [<b>{plantEntity.id}</b>]
         </h2>
@@ -57,8 +69,79 @@ export const PlantDetail = (props: IPlantDetailProps) => {
           <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
         </Button>
       </Col>
-      <Col md="6">
-        <h4>
+      <Col md="9">
+        <Row>
+          <Col md="6">
+            <LineGraph /**data={[
+            {
+              "time": "2011-10-01",
+              "value": 62.7
+            }, {
+              "time": "2011-10-02",
+              "value": 59.9
+            }, {
+              "time": "2011-10-03",
+              "value": 59.1
+            }, {
+              "time": "2011-10-04",
+              "value": 58.8
+            }, {
+              "time": "2011-10-05",
+              "value": 58.7
+            }, {
+              "time": "2011-10-06",
+              "value": 57
+            }, {
+              "time": "2011-10-07",
+              "value": 56.7
+            }, {
+              "time": "2011-10-08",
+              "value": 56.8
+            }, {
+              "time": "2011-10-09",
+              "value": 56.7
+            }, {
+              "time": "2011-10-10",
+              "value": 60.1
+            }, {
+              "time": "2011-10-11",
+              "value": 61.1
+            }, {
+              "time": "2011-10-12",
+              "value": 61.5
+            }, {
+              "time": "2011-10-13",
+              "value": 64.3
+            }, {
+              "time": "2011-10-14",
+              "value": 67.1
+            }, {
+              "time": "2011-10-15",
+              "value": 64.6
+            }, {
+              "time": "2011-10-16",
+              "value": 61.6
+            }, {
+              "time": "2011-10-17",
+              "value": 61.1
+            }, {
+              "time": "2011-10-18",
+              "value": 59.2
+            }, {
+              "time": "2011-10-19",
+              "value": 58.9
+            }, {
+              "time": "2011-10-20",
+              "value": 57.2
+            }
+          ]} */
+          data={temps} size={[300, 300]} margin={[25, 10, 10, 25]}/>
+          </Col>
+        </Row>
+        <Row>
+
+        </Row>
+        {/**  <h4>
           {plantEntity.name} Data Readings
         </h4>\
         {dataReadings && dataReadings.length > 0 ? (
@@ -88,7 +171,7 @@ export const PlantDetail = (props: IPlantDetailProps) => {
             </tbody>
           </Table>) : (
           <div className="alert alert-warning">No Data Readings found</div>
-        )}
+          )}**/}
       </Col>
     </Row>
   );
