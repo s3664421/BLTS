@@ -23,7 +23,7 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
   const { customerEntity, plant } = props;
   return (
     <Row>
-      <Col md="8">
+      <Col md="6">
         <h2>
           Customer [<b>{customerEntity.id}</b>]
         </h2>
@@ -59,15 +59,17 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
           <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
         </Button>
       </Col>
-      <Col md="8">
+      <Col md="6">
         <h4>
-          {customerEntity.id}: Customers plants
+          Customers Plant List
         </h4>
         {plant && plant.length > 0 ? (
           <Table responsive>
             <thead>
               <tr>
-                <th>ID</th>
+                <th>Plant Name</th>
+                <th>Sensor ID</th>
+                <th>Location</th>
                 <th />
               </tr>
             </thead>
@@ -75,6 +77,8 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
               {plant.map((plantReading, i) => (
                 <tr key={`entity-${i}`}>
                   <td>{plantReading.name}</td>
+                  <td>{plantReading.sensorID}</td>
+                  <td>{plantReading.location}</td>
                 </tr>
               ))}
             </tbody>
