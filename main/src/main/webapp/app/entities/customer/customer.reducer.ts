@@ -126,9 +126,9 @@ export const getEntity: ICrudGetAction<ICustomer> = id => {
 };
 
 // Step 8: Function - Obtain list of sensors (plants) for a specific customer
-export const getAllPlants: ICrudGetAction<IPlant> = sensorid => id => {
-  // (Funtion and the argument is 'customerID')
-  const requestUrl = `${plantApiUrl}/${sensorid}/${id}`; // Backend URL the request goes to (believe this is the error)
+export const getAllPlants: ICrudGetAction<IPlant> = customerID => {
+  // Line that connects to plant resources
+  const requestUrl = `${plantApiUrl}/customer/${customerID}`; // Backend URL the request goes to (believe this is the error)
   return {
     type: ACTION_TYPES.FETCH_SENSORID, // Type (action type) which lets switch case handle it
     payload: axios.get<IPlant>(requestUrl) // Payload, get request for data readings at that URL, updates state variable
