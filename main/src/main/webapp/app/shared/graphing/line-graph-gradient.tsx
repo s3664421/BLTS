@@ -24,7 +24,6 @@ export class LineGraph extends Component {
      }
 
     createLineGraph(props) {
-        console.log("props: ", props);
         const node = this.node;
 
         const x = scaleUtc()
@@ -46,7 +45,7 @@ export class LineGraph extends Component {
             .attr("transform", `translate(${props.margin[0]}, 0)`)
             .call(axisLeft(y))
             .call(g => g.select(".domain").remove())
-            .call(g => g.select(".tick:last-of-type text").append("tspan").text(props.data.y));
+            .call(g => g.select(".tick:last-of-type text").append("tspan").text(props.data.y)); 
 
         const dataLine = line()
             .curve(curveStep)
@@ -56,6 +55,22 @@ export class LineGraph extends Component {
 
         select(node).append("g").call(xAxis);
         select(node).append("g").call(yAxis);
+
+        //X-Axis label
+        select(node).append("text")             
+            .attr("transform",
+                  `translate(${props.size[0]/2} , ${props.size[1] + props.margin[1] + 20})`)
+            .style("text-anchor", "middle")
+            .text(props.labels[1]);
+      
+        //Y-Axis label
+        select(node).append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0)
+            .attr("x",0 - (props.size[1] / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text(props.labels[0]); 
 
         select(node).append("linearGradient")
             .attr("id", "gradient")
@@ -70,6 +85,8 @@ export class LineGraph extends Component {
             .attr("offset", d => d)
             .attr("stop-color", colour.interpolator());
 
+        select(node).selectAll("path").exit().remove();
+
         select(node).append("path")
             .datum(props.data)
             .attr("fill", "none")
@@ -83,6 +100,7 @@ export class LineGraph extends Component {
 
     render() {
         return <svg ref={node => this.node = node}
-        width={this.props.size[0]} height={this.props.size[1]}></svg>
+        width={this.props.size[0] + this.props.margin[0] + this.props.margin[2]} 
+        height={this.props.size[1] + this.props.margin[1] + this.props.margin[3]}></svg>
     }
 }

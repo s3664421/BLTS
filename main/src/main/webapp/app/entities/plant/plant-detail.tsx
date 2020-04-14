@@ -2,8 +2,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Table } from 'reactstrap';
-import { ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Button, Row, Col} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -23,15 +22,32 @@ export const PlantDetail = (props: IPlantDetailProps) => {
     props.getAllDataReading(props.match.params.id);
   }, []);
 
-  const { plantEntity, dataReadings } = props;
+  const { plantEntity, dataReadings, loading } = props;
   const temps = [];
+  const humids = [];
+  const lights = [];
+  const moist = [];
 
+  //Map data reading values into individual arrays
+  //of timestamps and values
   dataReadings.map((dataReading, i) => {
     temps.push(
-    {"time": dataReading.time, 
-    "value": dataReading.temp}
-  )});
-  console.log("temps: ", temps);
+      {"time": dataReading.time, 
+      "value": dataReading.temp}
+    );
+    humids.push(
+      {"time": dataReading.time, 
+      "value": dataReading.humidity}
+    );
+    lights.push(
+      {"time": dataReading.time, 
+      "value": dataReading.light}
+    );
+    moist.push(
+      {"time": dataReading.time, 
+      "value": dataReading.moisture}
+    );     
+  });
 
   return (
     <Row>
@@ -70,108 +86,28 @@ export const PlantDetail = (props: IPlantDetailProps) => {
         </Button>
       </Col>
       <Col md="9">
-        <Row>
-          <Col md="6">
-            <LineGraph /**data={[
-            {
-              "time": "2011-10-01",
-              "value": 62.7
-            }, {
-              "time": "2011-10-02",
-              "value": 59.9
-            }, {
-              "time": "2011-10-03",
-              "value": 59.1
-            }, {
-              "time": "2011-10-04",
-              "value": 58.8
-            }, {
-              "time": "2011-10-05",
-              "value": 58.7
-            }, {
-              "time": "2011-10-06",
-              "value": 57
-            }, {
-              "time": "2011-10-07",
-              "value": 56.7
-            }, {
-              "time": "2011-10-08",
-              "value": 56.8
-            }, {
-              "time": "2011-10-09",
-              "value": 56.7
-            }, {
-              "time": "2011-10-10",
-              "value": 60.1
-            }, {
-              "time": "2011-10-11",
-              "value": 61.1
-            }, {
-              "time": "2011-10-12",
-              "value": 61.5
-            }, {
-              "time": "2011-10-13",
-              "value": 64.3
-            }, {
-              "time": "2011-10-14",
-              "value": 67.1
-            }, {
-              "time": "2011-10-15",
-              "value": 64.6
-            }, {
-              "time": "2011-10-16",
-              "value": 61.6
-            }, {
-              "time": "2011-10-17",
-              "value": 61.1
-            }, {
-              "time": "2011-10-18",
-              "value": 59.2
-            }, {
-              "time": "2011-10-19",
-              "value": 58.9
-            }, {
-              "time": "2011-10-20",
-              "value": 57.2
-            }
-          ]} */
-          data={temps} size={[300, 300]} margin={[25, 10, 10, 25]}/>
-          </Col>
-        </Row>
-        <Row>
-
-        </Row>
-        {/**  <h4>
-          {plantEntity.name} Data Readings
-        </h4>\
-        {dataReadings && dataReadings.length > 0 ? (
-          <Table responsive>
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Temp</th>
-                <th>Humidity</th>
-                <th>Light</th>
-                <th>Moisture</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {dataReadings.map((dataReading, i) => (
-                <tr key={`entity-${i}`}>
-                  <td>
-                    <TextFormat type="date" value={dataReading.time} format={APP_DATE_FORMAT} />
-                  </td>
-                  <td>{dataReading.temp}</td>
-                  <td>{dataReading.humidity}</td>
-                  <td>{dataReading.light}</td>
-                  <td>{dataReading.moisture}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>) : (
-          <div className="alert alert-warning">No Data Readings found</div>
-          )}**/}
+      {dataReadings && dataReadings.length > 0 ? (
+        <div>
+          <Row>
+            <Col md="6">
+              <LineGraph data={temps} labels={["Temperature", "Time"]} size={[450, 250]} margin={[50, 10, 10, 25]}/>
+            </Col>
+            <Col md="6">
+              <LineGraph data={humids} labels={["Humidity", "Time"]} size={[450, 250]} margin={[50, 10, 10, 25]}/>
+            </Col>
+          </Row>
+          <Row>
+            <Col md="6">
+              <LineGraph data={lights} labels={["Light", "Time"]} size={[450, 250]} margin={[60, 10, 10, 25]}/>
+            </Col>
+            <Col md="6">
+              <LineGraph data={moist} labels={["Moisture", "Time"]} size={[450, 250]} margin={[50, 10, 10, 25]}/>
+            </Col>
+          </Row>
+        </div>
+      ) : (
+        !loading && <div className="alert alert-warning">No Data Readings found</div>
+      )}
       </Col>
     </Row>
   );
@@ -182,7 +118,8 @@ export const PlantDetail = (props: IPlantDetailProps) => {
 
 const mapStateToProps = ({ plant }: IRootState) => ({
   plantEntity: plant.entity,
-  dataReadings: plant.dataReadings
+  dataReadings: plant.dataReadings,
+  loading: plant.loading
 });
 
 const mapDispatchToProps = { getEntity, getAllDataReading };
