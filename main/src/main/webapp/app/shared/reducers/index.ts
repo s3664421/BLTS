@@ -31,6 +31,10 @@ import plantCase, {
 import customer, {
   CustomerState
 } from 'app/entities/customer/customer.reducer';
+// prettier-ignore
+import dashboard, {
+  DashboardState
+} from 'app/entities/dashboard/dashboard.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -48,6 +52,7 @@ export interface IRootState {
   readonly dataReading: DataReadingState;
   readonly plantCase: PlantCaseState;
   readonly customer: CustomerState;
+  readonly dashboard: DashboardState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -67,6 +72,7 @@ const rootReducer = combineReducers<IRootState>({
   dataReading,
   plantCase,
   customer,
+  dashboard,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

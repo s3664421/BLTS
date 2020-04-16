@@ -1,16 +1,17 @@
 import './home.scss';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-import { Row, Col, Alert } from 'reactstrap';
+import { Row, Col, Alert, Container, Card, CardText, CardTitle, Button } from 'reactstrap';
 
 import { IRootState } from 'app/shared/reducers';
 
 export type IHomeProp = StateProps;
 
 export const Home = (props: IHomeProp) => {
+
   const { account } = props;
 
   return (
@@ -20,7 +21,10 @@ export const Home = (props: IHomeProp) => {
         <p className="lead">This page is a placeholder</p>
         {account && account.login ? (
           <div>
-            <Alert color="success">You are logged in as user {account.login}.</Alert>
+            <div>
+              <Alert color="success">You are logged in as user {account.login}.</Alert> 
+            </div>
+           
           </div>
         ) : (
           <div>
