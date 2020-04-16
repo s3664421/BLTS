@@ -15,16 +15,18 @@ export const BrandIcon = props => (
 export const Brand = props => (
   <NavbarBrand tag={Link} to="/" className="brand-logo">
     <BrandIcon />
-    <span className="brand-title">Main</span>
+    <span className="brand-title">SmartPlant</span>
     <span className="navbar-version">{appConfig.VERSION}</span>
   </NavbarBrand>
 );
 
 export const Home = props => (
   <NavItem>
-    <NavLink tag={Link} to="/" className="d-flex align-items-center">
+    <NavLink tag={Link} to="/dashboard" className="d-flex align-items-center">
       <FontAwesomeIcon icon="home" />
-      <span>Home</span>
+      <span>DashBoard</span>
     </NavLink>
   </NavItem>
 );
+
+

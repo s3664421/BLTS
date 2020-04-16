@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-import { Row, Col, Alert, Container, Card, CardText, CardTitle, Button } from 'reactstrap';
+import { Row, Col, Alert, Container, Jumbotron, Button } from 'reactstrap';
 
 import { IRootState } from 'app/shared/reducers';
 
@@ -17,8 +17,6 @@ export const Home = (props: IHomeProp) => {
   return (
     <Row>
       <Col md="12">
-        <h2>SmartPlant Home Page</h2>
-        <p className="lead">This page is a placeholder</p>
         {account && account.login ? (
           <div>
             <div>
@@ -28,23 +26,21 @@ export const Home = (props: IHomeProp) => {
           </div>
         ) : (
           <div>
-            <Alert color="warning">
-              If you want to
-              <Link to="/login" className="alert-link">
-                {' '}
-                sign in
-              </Link>
-              , you can try the default accounts:
-              <br />- Administrator (login=&quot;admin&quot; and password=&quot;admin&quot;)
-              <br />- User (login=&quot;user&quot; and password=&quot;user&quot;).
-            </Alert>
+            
+            <div>
+      <Jumbotron fluid>
+        <Container fluid>
+          <h1 className="display-3">Welcome</h1>
+          <p className="lead">{"You're not currently logged in..."}</p>
+        </Container>
+        <Button tag = {Link} to = "/login" color="primary" size="lg">Login</Button>
+        <Container>
 
-            <Alert color="warning">
-              You do not have an account yet?&nbsp;
-              <Link to="/account/register" className="alert-link">
-                Register a new account
-              </Link>
-            </Alert>
+        </Container>
+      </Jumbotron>
+    </div>
+
+
           </div>
         )}
       </Col>
