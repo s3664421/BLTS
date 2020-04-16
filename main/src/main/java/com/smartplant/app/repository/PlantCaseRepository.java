@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface PlantCaseRepository extends JpaRepository<PlantCase, Long> {
 
+    List<PlantCase> findByUserIdIsNull();
+
     @Query("select plantCase from PlantCase plantCase where plantCase.user.login = ?#{principal.username}")
     List<PlantCase> findByUserIsCurrentUser();
 }

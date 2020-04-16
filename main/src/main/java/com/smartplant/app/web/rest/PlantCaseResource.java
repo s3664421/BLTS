@@ -99,6 +99,17 @@ public class PlantCaseResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+        /**
+     * {@code GET  /plant-cases} : get all the plantCases.
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of plantCases in body.
+     */
+    @GetMapping("/plant-case/unassigned")
+    public List<PlantCase>getAllUnassignedCases() {
+        log.debug("REST request to get a page of PlantCases that are not assigned");
+        return plantCaseRepository.findByUserIdIsNull();
+    }
+
     /**
      * {@code GET  /plant-cases/:id} : get the "id" plantCase.
      *
