@@ -25,6 +25,14 @@ export class LineGraph extends Component {
 
     createLineGraph(props) {
         const node = this.node;
+        // Clear canvas before drawing
+        select(node).selectAll("svg").remove();
+        const canvas = select(node).append("svg")
+            .attr("width", this.props.size[0] + this.props.margin[0] + this.props.margin[2])
+            .attr("height", this.props.size[1] + this.props.margin[1] + this.props.margin[3])
+            
+        //width={this.props.size[0] + this.props.margin[0] + this.props.margin[2]} 
+        //height={this.props.size[1] + this.props.margin[1] + this.props.margin[3]}
 
         const x = scaleUtc()
             .domain(extent(props.data, d => Date.parse(d.time)))
@@ -53,18 +61,18 @@ export class LineGraph extends Component {
             .x(d => x(Date.parse(d.time)))
             .y(d => y(d.value));
 
-        select(node).append("g").call(xAxis);
-        select(node).append("g").call(yAxis);
+        canvas.append("g").call(xAxis);
+        canvas.append("g").call(yAxis);
 
         //X-Axis label
-        select(node).append("text")             
+        canvas.append("text")             
             .attr("transform",
                   `translate(${props.size[0]/2} , ${props.size[1] + props.margin[1] + 20})`)
             .style("text-anchor", "middle")
             .text(props.labels[1]);
       
         //Y-Axis label
-        select(node).append("text")
+        canvas.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 0)
             .attr("x",0 - (props.size[1] / 2))
@@ -72,7 +80,7 @@ export class LineGraph extends Component {
             .style("text-anchor", "middle")
             .text(props.labels[0]); 
 
-        select(node).append("linearGradient")
+        canvas.append("linearGradient")
             .attr("id", "gradient")
             .attr("gradientUnits", "userSpaceOnUse")
             .attr("x1", 0)
@@ -85,9 +93,9 @@ export class LineGraph extends Component {
             .attr("offset", d => d)
             .attr("stop-color", colour.interpolator());
 
-        select(node).selectAll("path").exit().remove();
+        canvas.selectAll("path").exit().remove();
 
-        select(node).append("path")
+        canvas.append("path")
             .datum(props.data)
             .attr("fill", "none")
             .attr("stroke", "url(#gradient)")
@@ -99,8 +107,6 @@ export class LineGraph extends Component {
     
 
     render() {
-        return <svg ref={node => this.node = node}
-        width={this.props.size[0] + this.props.margin[0] + this.props.margin[2]} 
-        height={this.props.size[1] + this.props.margin[1] + this.props.margin[3]}></svg>
+        return <div ref={node => this.node = node}></div>
     }
 }

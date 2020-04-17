@@ -1,8 +1,8 @@
 /* eslint no-console: off */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col} from 'reactstrap';
+import { Button, Row, Col, Input} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -17,10 +17,43 @@ export interface IPlantDetailProps extends StateProps, DispatchProps, RouteCompo
 export interface IDataReadingDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const PlantDetail = (props: IPlantDetailProps) => {
+
+  const previousMonth = (): string => {
+    const now: Date = new Date();
+    const fromDate =
+      now.getMonth() === 0
+        ? new Date(now.getFullYear() - 1, 11, now.getDate())
+        : new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+    return fromDate.toISOString().slice(0, 10);
+  };
+  
+  const today = (): string => {
+    // Today + 1 day - needed if the current day must be included
+    const day: Date = new Date();
+    day.setDate(day.getDate() + 1);
+    const toDate = new Date(day.getFullYear(), day.getMonth(), day.getDate());
+    return toDate.toISOString().slice(0, 10);
+  };
+
+  const [fromDate, setFromDate] = useState(previousMonth());
+  const [toDate, setToDate] = useState(today());
+
   useEffect(() => {
     props.getEntity(props.match.params.id);
-    props.getAllDataReading(props.match.params.id);
   }, []);
+
+  useEffect (() => {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    getDataReadingsRange();
+  }, [fromDate, toDate]);
+
+  const getDataReadingsRange = () => {
+    props.getAllDataReading(props.match.params.id, fromDate, toDate);
+  }
+
+  const onChangeFromDate = evt => setFromDate(evt.target.value);
+
+  const onChangeToDate = evt => setToDate(evt.target.value);
 
   const { plantEntity, dataReadings, loading } = props;
   const temps = [];
@@ -77,6 +110,10 @@ export const PlantDetail = (props: IPlantDetailProps) => {
           <dt>Customer</dt>
           <dd>{plantEntity.customer ? plantEntity.customer.id : ''}</dd>
         </dl>
+        <span>Data Readings From</span>
+        <Input type="datetime-local" value={fromDate} onChange={onChangeFromDate} name="fromDate" id="fromDate" />
+        <span>To</span>
+        <Input type="datetime-local" value={toDate} onChange={onChangeToDate} name="toDate" id="toDate" />
         <Button tag={Link} to="/plant" replace color="info">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
         </Button>
