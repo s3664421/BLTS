@@ -35,6 +35,9 @@ export const Dashboard = (props: IDashboardProps) => {
 
            <Container>
               <Row>
+                <h2> New cases</h2>
+              </Row>
+              <Row>
                 <Col>
                    {(unassignedCases.length > 0)? ( 
                       <Alert color="danger">Action Needed: There are {unassignedCases.length} new cases that need your attention.</Alert>
@@ -51,7 +54,7 @@ export const Dashboard = (props: IDashboardProps) => {
            {unassignedCases && unassignedCases.length > 0 ? (
           
            
-           <Table responsive>
+           <Table responsive striped>
            
             <thead>
               <tr>
