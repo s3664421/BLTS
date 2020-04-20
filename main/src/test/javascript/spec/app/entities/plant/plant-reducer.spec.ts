@@ -11,11 +11,13 @@ import reducer, {
   deleteEntity,
   getEntities,
   getEntity,
+  getAllDataReading,
   updateEntity,
   reset
 } from 'app/entities/plant/plant.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IPlant, defaultValue } from 'app/shared/model/plant.model';
+import { IDataReading } from 'app/shared/model/data-reading.model';
 
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {
@@ -31,6 +33,7 @@ describe('Entities reducer tests', () => {
     errorMessage: null,
     entities: [] as ReadonlyArray<IPlant>,
     entity: defaultValue,
+    dataReadings: [] as ReadonlyArray<IDataReading>,
     totalItems: 0,
     updating: false,
     updateSuccess: false
@@ -45,6 +48,7 @@ describe('Entities reducer tests', () => {
     });
     expect(isEmpty(state.entities));
     expect(isEmpty(state.entity));
+    expect(isEmpty(state.dataReadings));
   }
 
   function testMultipleTypes(types, payload, testFunction) {
@@ -61,13 +65,17 @@ describe('Entities reducer tests', () => {
 
   describe('Requests', () => {
     it('should set state to loading', () => {
-      testMultipleTypes([REQUEST(ACTION_TYPES.FETCH_PLANT_LIST), REQUEST(ACTION_TYPES.FETCH_PLANT)], {}, state => {
-        expect(state).toMatchObject({
-          errorMessage: null,
-          updateSuccess: false,
-          loading: true
-        });
-      });
+      testMultipleTypes(
+        [REQUEST(ACTION_TYPES.FETCH_PLANT_LIST), REQUEST(ACTION_TYPES.FETCH_PLANT), REQUEST(ACTION_TYPES.FETCH_DATA_READINGS)],
+        {},
+        state => {
+          expect(state).toMatchObject({
+            errorMessage: null,
+            updateSuccess: false,
+            loading: true
+          });
+        }
+      );
     });
 
     it('should set state to updating', () => {
@@ -104,6 +112,7 @@ describe('Entities reducer tests', () => {
         [
           FAILURE(ACTION_TYPES.FETCH_PLANT_LIST),
           FAILURE(ACTION_TYPES.FETCH_PLANT),
+          FAILURE(ACTION_TYPES.FETCH_DATA_READINGS),
           FAILURE(ACTION_TYPES.CREATE_PLANT),
           FAILURE(ACTION_TYPES.UPDATE_PLANT),
           FAILURE(ACTION_TYPES.DELETE_PLANT)
