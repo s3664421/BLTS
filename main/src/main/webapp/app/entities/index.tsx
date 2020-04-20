@@ -9,6 +9,7 @@ import PlantThresholds from './plant-thresholds';
 import DataReading from './data-reading';
 import PlantCase from './plant-case';
 import Customer from './customer';
+import Dashboard from './dashboard';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -20,6 +21,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}data-reading`} component={DataReading} />
       <ErrorBoundaryRoute path={`${match.url}plant-case`} component={PlantCase} />
       <ErrorBoundaryRoute path={`${match.url}customer`} component={Customer} />
+      <ErrorBoundaryRoute path={`${match.url}dashboard`} component={Dashboard} />
       {/* jhipster-needle-add-route-path - JHipster will add routes here */}
     </Switch>
   </div>

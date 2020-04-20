@@ -11,13 +11,11 @@ import reducer, {
   deleteEntity,
   getEntities,
   getEntity,
-  getAllDataReading,
   updateEntity,
   reset
-} from 'app/entities/plant/plant.reducer';
+} from 'app/entities/dashboard/dashboard.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-import { IPlant, defaultValue } from 'app/shared/model/plant.model';
-import { IDataReading } from 'app/shared/model/data-reading.model';
+import { IDashboard, defaultValue } from 'app/shared/model/dashboard.model';
 
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {
@@ -31,10 +29,8 @@ describe('Entities reducer tests', () => {
   const initialState = {
     loading: false,
     errorMessage: null,
-    entities: [] as ReadonlyArray<IPlant>,
+    entities: [] as ReadonlyArray<IDashboard>,
     entity: defaultValue,
-    dataReadings: [] as ReadonlyArray<IDataReading>,
-    totalItems: 0,
     updating: false,
     updateSuccess: false
   };
@@ -48,7 +44,6 @@ describe('Entities reducer tests', () => {
     });
     expect(isEmpty(state.entities));
     expect(isEmpty(state.entity));
-    expect(isEmpty(state.dataReadings));
   }
 
   function testMultipleTypes(types, payload, testFunction) {
@@ -65,22 +60,18 @@ describe('Entities reducer tests', () => {
 
   describe('Requests', () => {
     it('should set state to loading', () => {
-      testMultipleTypes(
-        [REQUEST(ACTION_TYPES.FETCH_PLANT_LIST), REQUEST(ACTION_TYPES.FETCH_PLANT), REQUEST(ACTION_TYPES.FETCH_DATA_READINGS)],
-        {},
-        state => {
-          expect(state).toMatchObject({
-            errorMessage: null,
-            updateSuccess: false,
-            loading: true
-          });
-        }
-      );
+      testMultipleTypes([REQUEST(ACTION_TYPES.FETCH_DASHBOARD_LIST), REQUEST(ACTION_TYPES.FETCH_DASHBOARD)], {}, state => {
+        expect(state).toMatchObject({
+          errorMessage: null,
+          updateSuccess: false,
+          loading: true
+        });
+      });
     });
 
     it('should set state to updating', () => {
       testMultipleTypes(
-        [REQUEST(ACTION_TYPES.CREATE_PLANT), REQUEST(ACTION_TYPES.UPDATE_PLANT), REQUEST(ACTION_TYPES.DELETE_PLANT)],
+        [REQUEST(ACTION_TYPES.CREATE_DASHBOARD), REQUEST(ACTION_TYPES.UPDATE_DASHBOARD), REQUEST(ACTION_TYPES.DELETE_DASHBOARD)],
         {},
         state => {
           expect(state).toMatchObject({
@@ -110,12 +101,11 @@ describe('Entities reducer tests', () => {
     it('should set a message in errorMessage', () => {
       testMultipleTypes(
         [
-          FAILURE(ACTION_TYPES.FETCH_PLANT_LIST),
-          FAILURE(ACTION_TYPES.FETCH_PLANT),
-          FAILURE(ACTION_TYPES.FETCH_DATA_READINGS),
-          FAILURE(ACTION_TYPES.CREATE_PLANT),
-          FAILURE(ACTION_TYPES.UPDATE_PLANT),
-          FAILURE(ACTION_TYPES.DELETE_PLANT)
+          FAILURE(ACTION_TYPES.FETCH_DASHBOARD_LIST),
+          FAILURE(ACTION_TYPES.FETCH_DASHBOARD),
+          FAILURE(ACTION_TYPES.CREATE_DASHBOARD),
+          FAILURE(ACTION_TYPES.UPDATE_DASHBOARD),
+          FAILURE(ACTION_TYPES.DELETE_DASHBOARD)
         ],
         'error message',
         state => {
@@ -131,16 +121,15 @@ describe('Entities reducer tests', () => {
 
   describe('Successes', () => {
     it('should fetch all entities', () => {
-      const payload = { data: [{ 1: 'fake1' }, { 2: 'fake2' }], headers: { 'x-total-count': 123 } };
+      const payload = { data: [{ 1: 'fake1' }, { 2: 'fake2' }] };
       expect(
         reducer(undefined, {
-          type: SUCCESS(ACTION_TYPES.FETCH_PLANT_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_DASHBOARD_LIST),
           payload
         })
       ).toEqual({
         ...initialState,
         loading: false,
-        totalItems: payload.headers['x-total-count'],
         entities: payload.data
       });
     });
@@ -149,7 +138,7 @@ describe('Entities reducer tests', () => {
       const payload = { data: { 1: 'fake1' } };
       expect(
         reducer(undefined, {
-          type: SUCCESS(ACTION_TYPES.FETCH_PLANT),
+          type: SUCCESS(ACTION_TYPES.FETCH_DASHBOARD),
           payload
         })
       ).toEqual({
@@ -163,7 +152,7 @@ describe('Entities reducer tests', () => {
       const payload = { data: 'fake payload' };
       expect(
         reducer(undefined, {
-          type: SUCCESS(ACTION_TYPES.CREATE_PLANT),
+          type: SUCCESS(ACTION_TYPES.CREATE_DASHBOARD),
           payload
         })
       ).toEqual({
@@ -177,7 +166,7 @@ describe('Entities reducer tests', () => {
     it('should delete entity', () => {
       const payload = 'fake payload';
       const toTest = reducer(undefined, {
-        type: SUCCESS(ACTION_TYPES.DELETE_PLANT),
+        type: SUCCESS(ACTION_TYPES.DELETE_DASHBOARD),
         payload
       });
       expect(toTest).toMatchObject({
@@ -200,72 +189,72 @@ describe('Entities reducer tests', () => {
       axios.delete = sinon.stub().returns(Promise.resolve(resolvedObject));
     });
 
-    it('dispatches ACTION_TYPES.FETCH_PLANT_LIST actions', async () => {
+    it('dispatches ACTION_TYPES.FETCH_DASHBOARD_LIST actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.FETCH_PLANT_LIST)
+          type: REQUEST(ACTION_TYPES.FETCH_DASHBOARD_LIST)
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_PLANT_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_DASHBOARD_LIST),
           payload: resolvedObject
         }
       ];
       await store.dispatch(getEntities()).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.FETCH_PLANT actions', async () => {
+    it('dispatches ACTION_TYPES.FETCH_DASHBOARD actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.FETCH_PLANT)
+          type: REQUEST(ACTION_TYPES.FETCH_DASHBOARD)
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_PLANT),
+          type: SUCCESS(ACTION_TYPES.FETCH_DASHBOARD),
           payload: resolvedObject
         }
       ];
       await store.dispatch(getEntity(42666)).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.CREATE_PLANT actions', async () => {
+    it('dispatches ACTION_TYPES.CREATE_DASHBOARD actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.CREATE_PLANT)
+          type: REQUEST(ACTION_TYPES.CREATE_DASHBOARD)
         },
         {
-          type: SUCCESS(ACTION_TYPES.CREATE_PLANT),
+          type: SUCCESS(ACTION_TYPES.CREATE_DASHBOARD),
           payload: resolvedObject
         },
         {
-          type: REQUEST(ACTION_TYPES.FETCH_PLANT_LIST)
+          type: REQUEST(ACTION_TYPES.FETCH_DASHBOARD_LIST)
         },
         {
-          type: SUCCESS(ACTION_TYPES.FETCH_PLANT_LIST),
+          type: SUCCESS(ACTION_TYPES.FETCH_DASHBOARD_LIST),
           payload: resolvedObject
         }
       ];
       await store.dispatch(createEntity({ id: 1 })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.UPDATE_PLANT actions', async () => {
+    it('dispatches ACTION_TYPES.UPDATE_DASHBOARD actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.UPDATE_PLANT)
+          type: REQUEST(ACTION_TYPES.UPDATE_DASHBOARD)
         },
         {
-          type: SUCCESS(ACTION_TYPES.UPDATE_PLANT),
+          type: SUCCESS(ACTION_TYPES.UPDATE_DASHBOARD),
           payload: resolvedObject
         }
       ];
       await store.dispatch(updateEntity({ id: 1 })).then(() => expect(store.getActions()).toEqual(expectedActions));
     });
 
-    it('dispatches ACTION_TYPES.DELETE_PLANT actions', async () => {
+    it('dispatches ACTION_TYPES.DELETE_DASHBOARD actions', async () => {
       const expectedActions = [
         {
-          type: REQUEST(ACTION_TYPES.DELETE_PLANT)
+          type: REQUEST(ACTION_TYPES.DELETE_DASHBOARD)
         },
         {
-          type: SUCCESS(ACTION_TYPES.DELETE_PLANT),
+          type: SUCCESS(ACTION_TYPES.DELETE_DASHBOARD),
           payload: resolvedObject
         }
       ];

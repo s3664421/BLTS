@@ -133,9 +133,12 @@ export const getEntity: ICrudGetAction<IPlant> = id => {
   };
 };
 
-// Obtain list of dataReadings for specific plant (Action type is generated from this function here)
-export const getAllDataReading: ICrudGetAction<IDataReading> = plantID => {
-  const requestUrl = `${dataReadingApiUrl}/sensor/${plantID}`;
+// Obtain list of dataReadings for specific plant
+export const getAllDataReading = (plantID, fromDate, toDate) => {
+  let requestUrl = `${dataReadingApiUrl}/sensor/${plantID}`;
+  if (fromDate && toDate) {
+    requestUrl += `/between/${fromDate}/${toDate}`;
+  }
   return {
     type: ACTION_TYPES.FETCH_DATA_READINGS,
     payload: axios.get<IDataReading>(requestUrl)
