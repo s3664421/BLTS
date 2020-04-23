@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import com.smartplant.app.domain.enumeration.CaseStatus;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -79,6 +80,10 @@ public class PlantCaseResource {
         if (plantCase.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+
+        if (plantCase.getStatus() == CaseStatus.ASSIGNED && plantCase.getUser() == null) {
+            throw new BadRequestAlertException("Cannot Assign Case with no employee: ", ENTITY_NAME, "no employee selected to assign to");
+        }
         PlantCase result = plantCaseRepository.save(plantCase);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, plantCase.getId().toString()))
@@ -97,6 +102,28 @@ public class PlantCaseResource {
         Page<PlantCase> page = plantCaseRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+        /**
+     * {@code GET  /plant-cases} : get all assigned plant cases
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of plantCases in body.
+     */
+    @GetMapping("/plant-case/active")
+    public List<PlantCase>getAllAssignedCases() {
+        log.debug("REST request to get a page of PlantCases that are assigned");
+        return plantCaseRepository.findByStatus(CaseStatus.ASSIGNED);
+    }
+
+         /**
+     * {@code GET  /plant-cases} : get all the plantCases that are unassigned
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of plantCases in body.
+     */
+    @GetMapping("/plant-case/unassigned")
+    public List<PlantCase>getAllUnassignedCases() {
+        log.debug("REST request to get a page of PlantCases that are not assigned");
+        return plantCaseRepository.findByStatus(CaseStatus.OPEN);
     }
 
     /**
