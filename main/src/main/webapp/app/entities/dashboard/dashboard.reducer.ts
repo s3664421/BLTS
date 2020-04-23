@@ -6,6 +6,7 @@ import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util'
 
 import { IDashboard, defaultValue } from 'app/shared/model/dashboard.model';
 import { IPlantCase } from 'app/shared/model/plant-case.model';
+import { IUser } from 'app/shared/model/user.model';
 
 export const ACTION_TYPES = {
   FETCH_DASHBOARD_LIST: 'dashboard/FETCH_DASHBOARD_LIST',
@@ -14,6 +15,7 @@ export const ACTION_TYPES = {
   UPDATE_DASHBOARD: 'dashboard/UPDATE_DASHBOARD',
   DELETE_DASHBOARD: 'dashboard/DELETE_DASHBOARD',
   FETCH_UNASSIGNED_CASE: 'dashboard/FETCH_UNASSIGNED_CASE',
+  FETCH_ACTIVE_CASE: 'dashboard/FETCH_ACTIVE_CASE',
   RESET: 'dashboard/RESET'
 };
 
@@ -22,6 +24,9 @@ const initialState = {
   errorMessage: null,
   entities: [] as ReadonlyArray<IDashboard>,
   unassignedCases: [] as ReadonlyArray<IPlantCase>,
+  employeeCases: [] as ReadonlyArray<IPlantCase>,
+  getEmployees : [] as ReadonlyArray<IUser>,
+  users : [] as ReadonlyArray<IUser>,
   entity: defaultValue,
   updating: false,
   updateSuccess: false
@@ -35,6 +40,7 @@ export default (state: DashboardState = initialState, action): DashboardState =>
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_DASHBOARD_LIST):
     case REQUEST(ACTION_TYPES.FETCH_UNASSIGNED_CASE):
+    case REQUEST(ACTION_TYPES.FETCH_ACTIVE_CASE):
     case REQUEST(ACTION_TYPES.FETCH_DASHBOARD):
       return {
         ...state,
@@ -96,6 +102,13 @@ export default (state: DashboardState = initialState, action): DashboardState =>
         loading: false,
         unassignedCases: action.payload.data
       };
+
+      case SUCCESS(ACTION_TYPES.FETCH_ACTIVE_CASE):
+        return {
+          ...state,
+          loading: false,
+          employeeCases: action.payload.data
+        };
     case ACTION_TYPES.RESET:
       return {
         ...initialState
@@ -156,6 +169,16 @@ export const getUnassignedCases: ICrudGetAllAction<IPlantCase> = id => {
     payload: axios.get<IPlantCase>(requestUrl)
   };
 };
+
+export const getAllActiveCases: ICrudGetAllAction<IPlantCase> = id => {
+  const requestUrl = `${plantCaseAPIUrl}/active`;
+  return {
+    type: ACTION_TYPES.FETCH_ACTIVE_CASE,
+    payload: axios.get<IPlantCase>(requestUrl)
+  };
+};
+
+
 
 export const reset = () => ({
   type: ACTION_TYPES.RESET

@@ -55,7 +55,7 @@ export const PlantCaseUpdate = (props: IPlantCaseUpdateProps) => {
         ...plantCaseEntity,
         ...values
       };
-      entity.user = users[values.user];
+      entity.user = users[values.plant.user];
 
       if (isNew) {
         props.createEntity(entity);
@@ -156,7 +156,7 @@ export const PlantCaseUpdate = (props: IPlantCaseUpdateProps) => {
               </AvGroup>
               <AvGroup>
                 <Label for="plant-case-user">User</Label>
-                <AvInput id="plant-case-user" type="select" className="form-control" name="user">
+                <AvInput id="plant-case-user" type="select" className="form-control" name="plant.user">
                   <option value="" key="0" />
                   {users
                     ? users.map((otherEntity, index) => (
