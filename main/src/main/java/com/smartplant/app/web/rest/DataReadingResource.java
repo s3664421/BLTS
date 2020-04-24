@@ -24,13 +24,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -178,5 +177,55 @@ public class DataReadingResource {
         Optional<List<DataReading>> dataReading = dataReadingRepository.findAllByPlantIDAndTimeBetween(plantID, fromDate, toDate);
         return ResponseUtil.wrapOrNotFound(dataReading);
     }
+    
+    /**
+     * Periodically calculate the average of all readings over a specified period (currently 6 hours) for each plant.
+     * This value is used to determine whether or not a case needs to be generated, which should happen when this average
+     * value falls below the threshold values for that plant and reading type.
+     * 
+     * TODO: Generate a case if the calculated average falls below the threshold.
+     */
+    // Test Schedule set to fire every minute, use this one for debugging.
+    //@Scheduled(cron="0 * * ? * *")
+    @Scheduled(cron="0 0 0/6 ? * *")
+    public void calculateReadingAvgForAllPlants() {
+    	int hoursToAvgOver = 6;
+    	log.debug("Scheduled recalculation of data reading averages for all plants, currently occuring every {} hours.", hoursToAvgOver);
+    	List<Plant> plants = plantRepository.findAll();
+    	
+    	for (int i = 0; i < plants.size(); i++) {
+    		Plant currPlant = plants.get(i);
+    		Long plantID = currPlant.getId();
+    		String toDate = Instant.now().toString();
+    		// 3600 seconds in an hour
+    		String fromDate = Instant.now().minusSeconds(3600 * hoursToAvgOver).toString();
+    		// Get all data Readings for this plant between now and 6 hours ago
+    		Optional<List<DataReading>> dataReadingsWrap = dataReadingRepository.findAllByPlantIDAndTimeBetween(plantID, fromDate, toDate);
+    		
+    		if (dataReadingsWrap.isPresent()) {
+    			List<DataReading> dataReadings = dataReadingsWrap.get();
+    			log.debug("There are {} readings for plant with ID: {}", dataReadings.size(), currPlant.getId());
+    			Float divisor, temp, humidity, light, moisture;
+    			if (dataReadings.size() < hoursToAvgOver) {
+    				divisor = (float) dataReadings.size();
+    			} else {
+    				divisor = (float) hoursToAvgOver;
+    			}
+    			temp = 0f; humidity = 0f; light = 0f; moisture = 0f;
+    			for (int j = 0; j < dataReadings.size(); j++) {
+    				temp += dataReadings.get(j).getTemp();
+    				humidity += dataReadings.get(j).getHumidity();
+    				light += dataReadings.get(j).getLight();
+    				moisture += dataReadings.get(j).getMoisture();
+    			}
+    			currPlant
+	    			.avgTemp(temp/divisor)
+	    			.avgHumidity(humidity/divisor)
+	    			.avgLight(light/divisor)
+	    			.avgMoisture(moisture/divisor);
+    		} 
+    	}
+    }
+    
     
 }
