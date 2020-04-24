@@ -44,7 +44,7 @@ public class PlantCaseResourceIT {
     private static final Instant UPDATED_TIME_CLOSED = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final CaseStatus DEFAULT_STATUS = CaseStatus.OPEN;
-    private static final CaseStatus UPDATED_STATUS = CaseStatus.ASSIGNED;
+    private static final CaseStatus UPDATED_STATUS = CaseStatus.CLOSED;
 
     private static final String DEFAULT_CASE_NOTES = "AAAAAAAAAA";
     private static final String UPDATED_CASE_NOTES = "BBBBBBBBBB";
