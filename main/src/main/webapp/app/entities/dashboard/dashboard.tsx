@@ -15,6 +15,7 @@ import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import { IUser } from 'app/shared/model/user.model';
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
 import plant from '../plant/plant';
+import { EventEmitter } from 'events';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 export interface IPlantCaseProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
@@ -33,15 +34,26 @@ export const Dashboard = (props: IDashboardProps) => {
 
   const handleClick = (event) => {
    
+    if(event.target.value === "-1")
+    {
+      alert("nope");
+      return;
+    
+    }
    const entity = {
      ...unassignedCases[event.target.options[event.target.selectedIndex].dataset.plant]
    };
 
    entity.user = users[event.target.value];
    entity.status = CaseStatus.ASSIGNED;
-   props.updateEntity(entity);
-   props.getUnassignedCases(props.account);
-   props.getAllActiveCases(props.account);
+   if(props.updateEntity(entity))
+   {
+    props.getUnassignedCases(props.account);
+    props.getAllActiveCases(props.account);
+    
+   }
+ 
+
   };
 
 
@@ -115,7 +127,7 @@ export const Dashboard = (props: IDashboardProps) => {
                   <td>{plantCase.plant ? <Link to={`plant/${plantCase.plant.id}`}>{plantCase.plant.id}</Link> : ''}</td>
                   <td> 
                   <select onChange={(e) =>handleClick(e)}>
-
+                  <option key = "-1" value= "-1" ></option>
                     {users
                     ? users.map((otherEntity, index) => ( 
                       <option key = {index} value={index} data-plant = {i}  >{otherEntity.firstName}</option>

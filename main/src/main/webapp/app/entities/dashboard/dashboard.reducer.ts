@@ -23,7 +23,7 @@ const initialState = {
   loading: false,
   errorMessage: null,
   entities: [] as ReadonlyArray<IDashboard>,
-  unassignedCases: [] as ReadonlyArray<IPlantCase>,
+  unassignedCases: [] as Array<IPlantCase>,
   employeeCases: [] as ReadonlyArray<IPlantCase>,
   getEmployees : [] as ReadonlyArray<IUser>,
   users : [] as ReadonlyArray<IUser>,
