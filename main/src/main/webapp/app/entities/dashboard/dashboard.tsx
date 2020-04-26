@@ -8,7 +8,7 @@ import { updateEntity } from '../plant-case/plant-case.reducer';
 import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
 import { CaseStatus } from 'app/shared/model/enumerations/case-status.model';
 import { IRootState } from 'app/shared/reducers';
-import { getEntities, getUnassignedCases, getAllActiveCases} from './dashboard.reducer';
+import { getEntities, getUnassignedCases, getCaseForEmployee, getAllActiveCases} from './dashboard.reducer';
 import { IDashboard } from 'app/shared/model/dashboard.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT, AUTHORITIES } from 'app/config/constants';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
@@ -22,7 +22,7 @@ export interface IPlantCaseProps extends StateProps, DispatchProps, RouteCompone
 
 export const Dashboard = (props: IDashboardProps) => {
 
-  const { dashboardList, match, loading, loadingPlantCase, isAdmin, isManager, isCustomer, isEmployee, account, unassignedCases, employeeCases, users } = props;
+  const { dashboardList, match, loading, loadingPlantCase, isAdmin, isManager, isCustomer, isEmployee, account, unassignedCases, employeeCases, users, assignedCases } = props;
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
@@ -30,6 +30,7 @@ export const Dashboard = (props: IDashboardProps) => {
     props.getUnassignedCases(props.account);
     props.getAllActiveCases(props.account);
     props.getUsers();
+    props.getCaseForEmployee(props.account.id);
   }, []);
 
   const handleClick = (event) => {
@@ -220,7 +221,9 @@ export const Dashboard = (props: IDashboardProps) => {
                  </td>
                 
                  <td>{plantCase.status}</td>
+                 {(plantCase.user)? ( 
                  <td>{plantCase.user.firstName ? <Link to={`/`}>{plantCase.user.firstName}</Link> : ''}</td>
+                 ):( <div> No Employee Assigned</div>)}
                  <td className="text-right">
                    <div className="btn-group flex-btn-group-container">
                      <Button tag={Link} to={`plant-case/${plantCase.id}`} color="info" size="sm">
@@ -261,10 +264,93 @@ export const Dashboard = (props: IDashboardProps) => {
                </div>
          </div>):(
            isEmployee ? (
-            <div>Employee Dashboard
+            <div>
+              <div>Employee Dashboard </div>
+              <div>
+              {(assignedCases.length > 0)? ( 
+                      <Alert color="danger">Action Needed: There are {assignedCases.length} new cases that need your attention.</Alert>
+                    ):(
+                       <Alert color="success">There are no unassigned cases.</Alert>
+                     )}
+              </div>
+
+              
+           {assignedCases && assignedCases.length > 0 ? (
+          
+           
+          <Table responsive striped>
+          
+           <thead>
+             <tr>
+               <th className="hand" >
+                 Needs Attention 
+               </th>
+               <th className="hand" >
+                 Time Opened 
+               </th>
+               <th className="hand" >
+                 Status 
+               </th>
+               <th>
+                 Plant 
+               </th>
+             
+              <th>
+                Location
+              </th>
+               <th />
+             </tr>
+           </thead>
+           <tbody>
+           
+             { assignedCases.map((plantCase, i) => (
+               <tr key={`entity-${i}`}>
+                 
+                 <td>{plantCase.needsAttention}</td>
+                 <td>
+                   <TextFormat type="date" value={plantCase.timeOpened} format={APP_DATE_FORMAT} />
+                 </td>
+                
+                 <td>{plantCase.status}</td>
+                 <td>{plantCase.plant ? <Link to={`plant/${plantCase.plant.id}`}>{plantCase.plant.id}</Link> : ''}</td>
+                
+                <td>{plantCase.plant.customer.address},{plantCase.plant.customer.city}, {plantCase.plant.customer.postcode}</td>
+
+                 <td className="text-right">
+                   <div className="btn-group flex-btn-group-container">
+                     <Button tag={Link} to={`plant-case/${plantCase.id}`} color="info" size="sm">
+                       <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
+                     </Button>
+                     <Button
+                       tag={Link}
+                       to={`plant-case/${plantCase.id}`}
+                       color="primary"
+                       size="sm"
+                     >
+                       <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
+                     </Button>
+                     <Button
+                       tag={Link}
+                       to={`plant-case/${plantCase.id}/delete`}
+                       color="secondary"
+                       size="sm"
+                     >
+                       <FontAwesomeIcon icon="check" /> <span className="d-none d-md-inline">Complete</span>
+                     </Button>
+                   </div>
+                 </td>
+               </tr>
+             ))}
+           </tbody>
+
+         </Table>
+         ): (
+           !loadingPlantCase && <div className="alert alert-warning">No Plant Cases found</div>
+         )}
 
 
             </div>
+            
            ):(
             <div>User DashBoard
 
@@ -292,6 +378,7 @@ const mapStateToProps = ({ userManagement, dashboard, authentication }: IRootSta
   employeeCases: dashboard.employeeCases,
   users : userManagement.users,
   loadingPlantCase: dashboard.loading,
+  assignedCases: dashboard.assignedCases
   
 });
 
@@ -300,7 +387,8 @@ const mapDispatchToProps = {
   getUnassignedCases,
   getAllActiveCases,
   getUsers, 
-  updateEntity
+  updateEntity,
+  getCaseForEmployee
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

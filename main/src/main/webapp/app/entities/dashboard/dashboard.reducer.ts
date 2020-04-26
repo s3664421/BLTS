@@ -16,6 +16,7 @@ export const ACTION_TYPES = {
   DELETE_DASHBOARD: 'dashboard/DELETE_DASHBOARD',
   FETCH_UNASSIGNED_CASE: 'dashboard/FETCH_UNASSIGNED_CASE',
   FETCH_ACTIVE_CASE: 'dashboard/FETCH_ACTIVE_CASE',
+  FETCH_EMPLOYEE_CASE: 'dashboard/FETCH_EMPLOYEE_CASE',
   RESET: 'dashboard/RESET'
 };
 
@@ -24,6 +25,7 @@ const initialState = {
   errorMessage: null,
   entities: [] as ReadonlyArray<IDashboard>,
   unassignedCases: [] as Array<IPlantCase>,
+  assignedCases: [] as ReadonlyArray<IPlantCase>,
   employeeCases: [] as ReadonlyArray<IPlantCase>,
   getEmployees : [] as ReadonlyArray<IUser>,
   users : [] as ReadonlyArray<IUser>,
@@ -41,6 +43,7 @@ export default (state: DashboardState = initialState, action): DashboardState =>
     case REQUEST(ACTION_TYPES.FETCH_DASHBOARD_LIST):
     case REQUEST(ACTION_TYPES.FETCH_UNASSIGNED_CASE):
     case REQUEST(ACTION_TYPES.FETCH_ACTIVE_CASE):
+    case REQUEST(ACTION_TYPES.FETCH_EMPLOYEE_CASE):
     case REQUEST(ACTION_TYPES.FETCH_DASHBOARD):
       return {
         ...state,
@@ -101,6 +104,13 @@ export default (state: DashboardState = initialState, action): DashboardState =>
         ...state,
         loading: false,
         unassignedCases: action.payload.data
+      };
+
+      case SUCCESS(ACTION_TYPES.FETCH_EMPLOYEE_CASE):
+      return {
+        ...state,
+        loading: false,
+        assignedCases: action.payload.data
       };
 
       case SUCCESS(ACTION_TYPES.FETCH_ACTIVE_CASE):
@@ -174,6 +184,14 @@ export const getAllActiveCases: ICrudGetAllAction<IPlantCase> = id => {
   const requestUrl = `${plantCaseAPIUrl}/active`;
   return {
     type: ACTION_TYPES.FETCH_ACTIVE_CASE,
+    payload: axios.get<IPlantCase>(requestUrl)
+  };
+};
+
+export const getCaseForEmployee: ICrudGetAllAction<IPlantCase> = id => {
+  const requestUrl = `${plantCaseAPIUrl}/assigned/${id}`;
+  return {
+    type: ACTION_TYPES.FETCH_EMPLOYEE_CASE,
     payload: axios.get<IPlantCase>(requestUrl)
   };
 };
