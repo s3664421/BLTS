@@ -34,3 +34,44 @@ Will have to change the name of div's if i only want to apply it to a specific p
 .table-responsive {
   border-radius: 3em;
 }
+
+.customer-outerbox {
+  background-color: #78c2ad;
+  padding: 1em;
+}
+
+.customer-upinnerbox {
+  background-color: #ccffcc;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 1em;
+  border-radius: 1em;
+}
+
+.customer-upinnerbox h2 {
+  color: black;
+  font-weight: bold;
+  text-align: center;
+}
+
+.customer-loinnerbox {
+  background-color: white;
+  margin-bottom: 10px;
+  padding: 1em;
+  border-radius: 1em;
+}
+
+.customer-loinnerbox h4 {
+  color: black;
+  font-weight: bold;
+  text-align: center;
+}
+
+.customer-upinnerbox #address,
+#postcode,
+#city,
+#state,
+#phoneNo,
+#custUser {
+  color: black;
+}
