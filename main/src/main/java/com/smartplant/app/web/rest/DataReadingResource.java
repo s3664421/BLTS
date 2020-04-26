@@ -4,9 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.smartplant.app.domain.DataReading;
 import com.smartplant.app.domain.Plant;
+import com.smartplant.app.domain.PlantCase;
+import com.smartplant.app.domain.PlantThresholds;
 import com.smartplant.app.repository.DataReadingRepository;
+import com.smartplant.app.repository.PlantCaseRepository;
 import com.smartplant.app.repository.PlantRepository;
 import com.smartplant.app.web.rest.errors.BadRequestAlertException;
+import com.smartplant.app.domain.enumeration.AttentionItem;
+import com.smartplant.app.domain.enumeration.CaseStatus;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -24,13 +29,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +57,9 @@ public class DataReadingResource {
 
     @Autowired
 	private PlantRepository plantRepository;
+    @Autowired
+    private PlantCaseRepository plantCaseRepository;
+    
     private final DataReadingRepository dataReadingRepository;
 
     public DataReadingResource(DataReadingRepository dataReadingRepository) {
@@ -178,5 +187,138 @@ public class DataReadingResource {
         Optional<List<DataReading>> dataReading = dataReadingRepository.findAllByPlantIDAndTimeBetween(plantID, fromDate, toDate);
         return ResponseUtil.wrapOrNotFound(dataReading);
     }
+    
+    /**
+     * Periodically calculate the average of all readings over a specified period (currently 6 hours) for each plant.
+     * This value is used to determine whether or not a case needs to be generated, which should happen when this average
+     * value falls below the threshold values for that plant and reading type.
+     * 
+     * TODO: Generate a case if the calculated average falls below the threshold.
+     */
+    // Test Schedule set to fire every minute, use this one for debugging.
+    //@Scheduled(cron="0 * * ? * *")
+    @Scheduled(cron="0 0 0/6 ? * *")
+    public void calculateReadingAvgForAllPlants() {
+    	int hoursToAvgOver = 6;
+    	log.debug("Scheduled recalculation of data reading averages for all plants, currently occuring every {} hours.", hoursToAvgOver);
+    	List<Plant> plants = plantRepository.findAll();
+    	
+    	for (int i = 0; i < plants.size(); i++) {
+    		Plant currPlant = plants.get(i);
+    		PlantThresholds thresholds = currPlant.getPlantthresholds();
+    		Long plantID = currPlant.getId();
+    		String toDate = Instant.now().toString();
+    		toDate = toDate.substring(0, toDate.length()-1);
+    		// 3600 seconds in an hour
+    		String fromDate = Instant.now().minusSeconds(3600 * hoursToAvgOver).toString();
+    		fromDate = fromDate.substring(0, fromDate.length()-1);
+    		// Get all data Readings for this plant between now and 6 hours ago
+    		Optional<List<DataReading>> dataReadingsWrap = dataReadingRepository.findAllByPlantIDAndTimeBetween(plantID, fromDate, toDate);
+    		
+    		if (dataReadingsWrap.isPresent()) {
+    			List<DataReading> dataReadings = dataReadingsWrap.get();
+    			//log.debug("There are {} readings for plant with ID: {}", dataReadings.size(), currPlant.getId());
+    			Float divisor, temp, humidity, light, moisture;
+    			divisor = (float) dataReadings.size();
+    			
+    			temp = 0f; humidity = 0f; light = 0f; moisture = 0f;
+    			for (int j = 0; j < dataReadings.size(); j++) {
+    				temp += dataReadings.get(j).getTemp();
+    				humidity += dataReadings.get(j).getHumidity();
+    				light += dataReadings.get(j).getLight();
+    				moisture += dataReadings.get(j).getMoisture();
+    			}
+    			currPlant
+	    			.avgTemp(temp/divisor)
+	    			.avgHumidity(humidity/divisor)
+	    			.avgLight(light/divisor)
+	    			.avgMoisture(moisture/divisor);
+    			
+    			//log.debug("Plant averages: {}, {}, {}, {}", currPlant.getAvgTemp(), currPlant.getAvgHumidity(), currPlant.getAvgLight(), currPlant.getAvgMoisture());
+    			//log.debug("Thresholds for this plant: {}", thresholds.toString());
+    			
+    			if (currPlant.getAvgTemp().compareTo(thresholds.getTempLow()) < 0) {
+    				//Generate temp low case
+    				PlantCase tlCase = new PlantCase();
+    				tlCase.needsAttention(AttentionItem.TEMP_LOW)
+    					.timeOpened(Instant.now())
+    					.status(CaseStatus.OPEN)
+    					.plant(currPlant);
+    				
+    				plantCaseRepository.save(tlCase);
+    			} else if (currPlant.getAvgTemp().compareTo(thresholds.getTempHigh()) > 0) {
+    				//Generate temp high case
+    				PlantCase thCase = new PlantCase();
+    				thCase.needsAttention(AttentionItem.TEMP_HIGH)
+    					.timeOpened(Instant.now())
+    					.status(CaseStatus.OPEN)
+    					.plant(currPlant);
+    				
+    				plantCaseRepository.save(thCase);
+    			}
+    			
+    			if (currPlant.getAvgHumidity().compareTo(thresholds.getHumidityLow()) < 0) {
+    				//Generate humidity low case
+    				PlantCase hlCase = new PlantCase();
+    				hlCase.needsAttention(AttentionItem.HUMIDITY_LOW)
+    					.timeOpened(Instant.now())
+    					.status(CaseStatus.OPEN)
+    					.plant(currPlant);
+    				
+    				plantCaseRepository.save(hlCase);
+    			} else if (currPlant.getAvgHumidity().compareTo(thresholds.getHumidityHigh()) > 0) {
+    				//Generate humidity high case
+    				PlantCase hhCase = new PlantCase();
+    				hhCase.needsAttention(AttentionItem.HUMIDITY_HIGH)
+    					.timeOpened(Instant.now())
+    					.status(CaseStatus.OPEN)
+    					.plant(currPlant);
+    				
+    				plantCaseRepository.save(hhCase);
+    			}
+    			
+    			if (currPlant.getAvgLight().compareTo(thresholds.getLightLow()) < 0) {
+    				//Generate light low case
+    				PlantCase llCase = new PlantCase();
+    				llCase.needsAttention(AttentionItem.LIGHT_LOW)
+    					.timeOpened(Instant.now())
+    					.status(CaseStatus.OPEN)
+    					.plant(currPlant);
+    				
+    				plantCaseRepository.save(llCase);
+    			} else if (currPlant.getAvgLight().compareTo(thresholds.getLightHigh()) > 0) {
+    				//Generate light high case
+    				PlantCase lhCase = new PlantCase();
+    				lhCase.needsAttention(AttentionItem.LIGHT_HIGH)
+    					.timeOpened(Instant.now())
+    					.status(CaseStatus.OPEN)
+    					.plant(currPlant);
+    				
+    				plantCaseRepository.save(lhCase);
+    			}
+    			
+    			if (currPlant.getAvgMoisture().compareTo(thresholds.getMoistureLow()) < 0) {
+    				//Generate moisture low case
+    				PlantCase mlCase = new PlantCase();
+    				mlCase.needsAttention(AttentionItem.MOISTURE_LOW)
+    					.timeOpened(Instant.now())
+    					.status(CaseStatus.OPEN)
+    					.plant(currPlant);
+    				
+    				plantCaseRepository.save(mlCase);
+    			} else if (currPlant.getAvgMoisture().compareTo(thresholds.getMoistureHigh()) > 0) {
+    				//Generate moisture high case
+    				PlantCase mhCase = new PlantCase();
+    				mhCase.needsAttention(AttentionItem.MOISTURE_HIGH)
+    					.timeOpened(Instant.now())
+    					.status(CaseStatus.OPEN)
+    					.plant(currPlant);
+    				
+    				plantCaseRepository.save(mhCase);
+    			}
+    		} else { log.debug("No readings for plant with ID: {}", currPlant.getId()); }
+    	}
+    }
+    
     
 }

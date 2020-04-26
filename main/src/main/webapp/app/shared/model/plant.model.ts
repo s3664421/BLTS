@@ -12,6 +12,10 @@ export interface IPlant {
   plantthresholds?: IPlantThresholds;
   plantcases?: IPlantCase[];
   customer?: ICustomer;
+  avgTemp?: number;
+  avgHumidity?: number;
+  avgLight?: number;
+  avgMoisture?: number;
 }
 
 export const defaultValue: Readonly<IPlant> = {};

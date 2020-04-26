@@ -41,6 +41,18 @@ public class Plant implements Serializable {
     @NotNull
     @Column(name = "sensor_id", nullable = false)
     private String sensorID;
+    
+    @Column(name = "avg_temp")
+    private Float avgTemp;
+    
+    @Column(name = "avg_humidity")
+    private Float avgHumidity;
+    
+    @Column(name = "avg_light")
+    private Float avgLight;
+    
+    @Column(name = "avg_moisture")
+    private Float avgMoisture;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -113,6 +125,58 @@ public class Plant implements Serializable {
 
     public void setSensorID(String sensorID) {
         this.sensorID = sensorID;
+    }
+    
+    public Float getAvgTemp() {
+    	return avgTemp;
+    }
+
+    public Plant avgTemp(Float avgTemp) {
+    	this.avgTemp = avgTemp;
+    	return this;
+    }
+    
+    public void setAvgTemp(Float avgTemp) {
+    	this.avgTemp = avgTemp;
+    }
+    
+    public Float getAvgHumidity() {
+    	return avgHumidity;
+    }
+
+    public Plant avgHumidity(Float avgHumidity) {
+    	this.avgHumidity = avgHumidity;
+    	return this;
+    }
+    
+    public void setAvgHumidity(Float avgHumidity) {
+    	this.avgHumidity = avgHumidity;
+    }
+    
+    public Float getAvgLight() {
+    	return avgLight;
+    }
+
+    public Plant avgLight(Float avgLight) {
+    	this.avgLight = avgLight;
+    	return this;
+    }
+    
+    public void setAvgLight(Float avgLight) {
+    	this.avgLight = avgLight;
+    }
+
+    public Float getAvgMoisture() {
+    	return avgMoisture;
+    }
+
+    public Plant avgMoisture(Float avgMoisture) {
+    	this.avgMoisture = avgMoisture;
+    	return this;
+    }
+    
+    public void setAvgMoisture(Float avgMoisture) {
+    	this.avgMoisture = avgMoisture;
     }
 
     public PlantThresholds getPlantthresholds() {
@@ -191,6 +255,10 @@ public class Plant implements Serializable {
             ", description='" + getDescription() + "'" +
             ", location='" + getLocation() + "'" +
             ", sensorID='" + getSensorID() + "'" +
+            ", avgTemp='" + getAvgTemp() + "'" +
+            ", avgHumidity='" + getAvgHumidity() + "'" +
+            ", avgLight='" + getAvgLight() + "'" +
+            ", avgMoisture='" + getAvgMoisture() + "'" +
             "}";
     }
 }

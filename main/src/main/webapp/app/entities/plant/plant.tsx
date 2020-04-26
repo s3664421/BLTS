@@ -81,6 +81,18 @@ export const Plant = (props: IPlantProps) => {
                 <th>
                   Customer <FontAwesomeIcon icon="sort" />
                 </th>
+                <th>
+                  Average Temperature <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  Average Humidity <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  Average Light <FontAwesomeIcon icon="sort" />
+                </th>
+                <th>
+                  Average Moisture <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -96,6 +108,10 @@ export const Plant = (props: IPlantProps) => {
                   <td>{plant.description}</td>
                   <td>{plant.location}</td>
                   <td>{plant.sensorID}</td>
+                  <td>{plant.avgTemp}</td>
+                  <td>{plant.avgHumidity}</td>
+                  <td>{plant.avgLight}</td>
+                  <td>{plant.avgMoisture}</td>
                   <td>
                     {plant.plantthresholds ? (
                       <Link to={`plant-thresholds/${plant.plantthresholds.id}`}>{plant.plantthresholds.id}</Link>

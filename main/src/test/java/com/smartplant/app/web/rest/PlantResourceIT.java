@@ -41,6 +41,18 @@ public class PlantResourceIT {
 
     private static final String DEFAULT_SENSOR_ID = "AAAAAAAAAA";
     private static final String UPDATED_SENSOR_ID = "BBBBBBBBBB";
+    
+    private static final Float DEFAULT_AVG_TEMP = 1f;
+    private static final Float UPDATED_AVG_TEMP = 2f;
+
+    private static final Float DEFAULT_AVG_HUMIDITY = 3f;
+    private static final Float UPDATED_AVG_HUMIDITY = 4f;
+
+    private static final Float DEFAULT_AVG_LIGHT = 5f;
+    private static final Float UPDATED_AVG_LIGHT = 6f;
+
+    private static final Float DEFAULT_AVG_MOISTURE = 7f;
+    private static final Float UPDATED_AVG_MOISTURE = 8f;
 
     @Autowired
     private PlantRepository plantRepository;
@@ -64,7 +76,11 @@ public class PlantResourceIT {
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
             .location(DEFAULT_LOCATION)
-            .sensorID(DEFAULT_SENSOR_ID);
+            .sensorID(DEFAULT_SENSOR_ID)
+        	.avgTemp(DEFAULT_AVG_TEMP)
+        	.avgHumidity(DEFAULT_AVG_HUMIDITY)
+        	.avgLight(DEFAULT_AVG_LIGHT)
+        	.avgMoisture(DEFAULT_AVG_MOISTURE);
         return plant;
     }
     /**
@@ -78,7 +94,11 @@ public class PlantResourceIT {
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .location(UPDATED_LOCATION)
-            .sensorID(UPDATED_SENSOR_ID);
+            .sensorID(UPDATED_SENSOR_ID)
+        	.avgTemp(UPDATED_AVG_TEMP)
+        	.avgHumidity(UPDATED_AVG_HUMIDITY)
+        	.avgLight(UPDATED_AVG_LIGHT)
+        	.avgMoisture(UPDATED_AVG_MOISTURE);
         return plant;
     }
 
@@ -106,6 +126,10 @@ public class PlantResourceIT {
         assertThat(testPlant.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testPlant.getLocation()).isEqualTo(DEFAULT_LOCATION);
         assertThat(testPlant.getSensorID()).isEqualTo(DEFAULT_SENSOR_ID);
+        assertThat(testPlant.getAvgTemp()).isEqualTo(DEFAULT_AVG_TEMP);
+        assertThat(testPlant.getAvgHumidity()).isEqualTo(DEFAULT_AVG_HUMIDITY);
+        assertThat(testPlant.getAvgLight()).isEqualTo(DEFAULT_AVG_LIGHT);
+        assertThat(testPlant.getAvgMoisture()).isEqualTo(DEFAULT_AVG_MOISTURE);
     }
 
     @Test
@@ -196,7 +220,11 @@ public class PlantResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].location").value(hasItem(DEFAULT_LOCATION)))
-            .andExpect(jsonPath("$.[*].sensorID").value(hasItem(DEFAULT_SENSOR_ID)));
+            .andExpect(jsonPath("$.[*].sensorID").value(hasItem(DEFAULT_SENSOR_ID)))
+            .andExpect(jsonPath("$.[*].avgTemp").value(hasItem(DEFAULT_AVG_TEMP.doubleValue())))
+            .andExpect(jsonPath("$.[*].avgHumidity").value(hasItem(DEFAULT_AVG_HUMIDITY.doubleValue())))
+            .andExpect(jsonPath("$.[*].avgLight").value(hasItem(DEFAULT_AVG_LIGHT.doubleValue())))
+            .andExpect(jsonPath("$.[*].avgMoisture").value(hasItem(DEFAULT_AVG_MOISTURE.doubleValue())));
     }
     
     @Test
@@ -213,7 +241,11 @@ public class PlantResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.location").value(DEFAULT_LOCATION))
-            .andExpect(jsonPath("$.sensorID").value(DEFAULT_SENSOR_ID));
+            .andExpect(jsonPath("$.sensorID").value(DEFAULT_SENSOR_ID))
+            .andExpect(jsonPath("$.avgTemp").value(DEFAULT_AVG_TEMP))
+            .andExpect(jsonPath("$.avgHumidity").value(DEFAULT_AVG_HUMIDITY))
+            .andExpect(jsonPath("$.avgLight").value(DEFAULT_AVG_LIGHT))
+            .andExpect(jsonPath("$.avgMoisture").value(DEFAULT_AVG_MOISTURE));
     }
 
     @Test
@@ -240,7 +272,11 @@ public class PlantResourceIT {
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .location(UPDATED_LOCATION)
-            .sensorID(UPDATED_SENSOR_ID);
+            .sensorID(UPDATED_SENSOR_ID)
+            .avgTemp(UPDATED_AVG_TEMP)
+            .avgHumidity(UPDATED_AVG_HUMIDITY)
+            .avgLight(UPDATED_AVG_LIGHT)
+            .avgMoisture(UPDATED_AVG_MOISTURE);
 
         restPlantMockMvc.perform(put("/api/plants")
             .contentType(MediaType.APPLICATION_JSON)
@@ -255,6 +291,10 @@ public class PlantResourceIT {
         assertThat(testPlant.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testPlant.getLocation()).isEqualTo(UPDATED_LOCATION);
         assertThat(testPlant.getSensorID()).isEqualTo(UPDATED_SENSOR_ID);
+        assertThat(testPlant.getAvgTemp()).isEqualTo(UPDATED_AVG_TEMP);
+        assertThat(testPlant.getAvgHumidity()).isEqualTo(UPDATED_AVG_HUMIDITY);
+        assertThat(testPlant.getAvgLight()).isEqualTo(UPDATED_AVG_LIGHT);
+        assertThat(testPlant.getAvgMoisture()).isEqualTo(UPDATED_AVG_MOISTURE);
     }
 
     @Test
