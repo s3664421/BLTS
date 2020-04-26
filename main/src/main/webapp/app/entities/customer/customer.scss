@@ -1,0 +1,36 @@
+/*****************************
+Note: ID = #, className = .
+Will have to change the name of div's if i only want to apply it to a specific page
+******************************/
+
+#customer-heading {
+  font-weight: bold;
+}
+
+.table-responsive td:nth-child(odd) {
+  background-color: #ccffcc;
+}
+
+.table-responsive td:nth-child(even) {
+  background-color: #ccffe5;
+}
+
+.table-responsive td {
+  color: black;
+  // border: #C0C0C0;
+  // border-style: solid;
+  // border-width: 1px;
+}
+
+.table-responsive th {
+  color: black;
+  text-align: center;
+  background-color: #78c2ad;
+  // border: #C0C0C0;
+  // border-style: solid;
+  // border-width: 1px;
+}
+
+.table-responsive {
+  border-radius: 3em;
+}

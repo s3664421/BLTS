@@ -1,3 +1,4 @@
+import './customer.scss';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -70,7 +71,6 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
                 <th>Plant Name</th>
                 <th>Sensor ID</th>
                 <th>Location</th>
-                <th />
               </tr>
             </thead>
             <tbody>
