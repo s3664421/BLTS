@@ -41,6 +41,8 @@ export const Dashboard = (props: IDashboardProps) => {
       return;
     
     }
+
+   
    const entity = {
      ...unassignedCases[event.target.options[event.target.selectedIndex].dataset.plant]
    };
@@ -51,9 +53,11 @@ export const Dashboard = (props: IDashboardProps) => {
    {
     props.getUnassignedCases(props.account);
     props.getAllActiveCases(props.account);
+    window.location.reload();
     
    }
  
+  
 
   };
 
@@ -128,7 +132,7 @@ export const Dashboard = (props: IDashboardProps) => {
                   <td>{plantCase.plant ? <Link to={`plant/${plantCase.plant.id}`}>{plantCase.plant.id}</Link> : ''}</td>
                   <td> 
                   <select onChange={(e) =>handleClick(e)}>
-                  <option key = "-1" value= "-1" ></option>
+                  <option  key = "-1" value= "-1" ></option>
                     {users
                     ? users.map((otherEntity, index) => ( 
                       <option key = {index} value={index} data-plant = {i}  >{otherEntity.firstName}</option>
