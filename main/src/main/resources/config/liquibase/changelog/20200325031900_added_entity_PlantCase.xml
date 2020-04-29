@@ -66,6 +66,8 @@
             <column name="time_closed" type="datetime"/>
             <column name="status" type="string"/>
             <column name="case_notes" type="string"/>
+	    <column name="user_id" type="numeric"/>
+	    <column name="plant_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>

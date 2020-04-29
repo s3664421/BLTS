@@ -143,7 +143,9 @@ export const Dashboard = (props: IDashboardProps) => {
                   <select onChange={(e) =>handleClick(e)}>
                   <option  key = "-1" value= "-1" ></option>
                     {users
-                    ? users.map((otherEntity, index) => ( 
+                    ? users.filter(function(user) {
+                      return user.authorities.includes(AUTHORITIES.EMPLOYEE);
+                    }).map((otherEntity, index) => ( 
                       <option key = {index} value={index} data-plant = {i}  >{otherEntity.firstName}</option>
                      
                       ))

@@ -30,8 +30,17 @@ export const Home = (props: IHomeProp) => {
             <div>
       <Jumbotron fluid>
         <Container fluid>
-          <h1 className="display-3">Welcome</h1>
+          <h1 className="display-5">Welcome to BLTS SmartPlant for Demonstration</h1>
           <p className="lead">{"You're not currently logged in..."}</p>
+          <p>Please try one of the following demo account username and password combinations:</p>
+          <ul>
+            <li>admin | admin - System Admin account including DB access and server health metrics</li>
+            <li>manager | manager - ACME Manager account</li>
+            <li>employee1 | employee1 - ACME Employee account</li>
+            <li>employee2 | employee2 - ACME Employee account</li>
+            <li>customer1 | customer1 - Customer account</li>
+            <li>customer2 | customer2 - Customer account</li>
+          </ul>
         </Container>
         <Button tag = {Link} to = "/login" color="primary" size="lg">Login</Button>
         <Container>

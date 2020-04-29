@@ -62,6 +62,7 @@
             <column name="humidity" type="numeric"/>
             <column name="light" type="numeric"/>
             <column name="moisture" type="numeric"/>
+	    <column name="plant_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
         </loadData>
     </changeSet>
