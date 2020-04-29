@@ -62,6 +62,38 @@ export const PlantCaseDetail = (props: IPlantCaseDetailProps) => {
           <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
         </Button>
       </Col>
+      <Col>
+        <div> 
+          {plantCaseEntity.plant ? (plantCaseEntity.plant.customer ? (
+         
+          <div>
+             <h2>
+              Plant Location
+            </h2>
+            <dl className="jh-entity-details">
+              <dt>
+                <span id="address">Address: <span className="customerResult">{plantCaseEntity.plant.customer.address}</span></span>
+              </dt>
+              <dt>
+                <span id="postcode">Postcode: <span className="customerResult">{plantCaseEntity.plant.customer.postcode}</span></span>
+              </dt>
+              <dt>
+                <span id="city">City: <span className="customerResult">{plantCaseEntity.plant.customer.city}</span></span>
+              </dt>
+              <dt>
+                <span id="state">State: <span className="customerResult">{plantCaseEntity.plant.customer.state}</span></span>
+              </dt>
+              <dt>
+                <span id="phoneNo">Phone No: <span className="customerResult">{plantCaseEntity.plant.customer.phoneNo}</span></span>
+              </dt>
+              
+            </dl>
+
+          </div>
+
+        ):(<div> No Customer Refrence Found </div>)) : (<div> No Plant Refrence Found </div>)}
+        </div>
+      </Col>
     </Row>
   );
 };

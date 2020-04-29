@@ -43,25 +43,34 @@ export const Dashboard = (props: IDashboardProps) => {
     }
 
    
-   const entity = {
+   const entitys = {
      ...unassignedCases[event.target.options[event.target.selectedIndex].dataset.plant]
    };
 
-   entity.user = users[event.target.value];
-   entity.status = CaseStatus.ASSIGNED;
-   if(props.updateEntity(entity))
+   entitys.user = users[event.target.value];
+   entitys.status = CaseStatus.ASSIGNED;
+   if(props.updateEntity(entitys))
    {
     props.getUnassignedCases(props.account);
     props.getAllActiveCases(props.account);
     window.location.reload();
     
    }
- 
-  
-
   };
 
+  const completeCase = (index) => {
 
+    const entitys = 
+    {
+      ...assignedCases[index]
+    };
+
+    entitys.status = CaseStatus.CLOSED;
+    if(props.updateEntity(entitys))
+    {
+      window.location.reload();
+    }
+  };
  
   return (
     <div>
@@ -120,16 +129,16 @@ export const Dashboard = (props: IDashboardProps) => {
             </thead>
             <tbody>
             
-              { unassignedCases.map((plantCase, i) => (
+              { unassignedCases.map((plantCases, i) => (
                 <tr key={`entity-${i}`}>
                   
-                  <td>{plantCase.needsAttention}</td>
+                  <td>{plantCases.needsAttention}</td>
                   <td>
-                    <TextFormat type="date" value={plantCase.timeOpened} format={APP_DATE_FORMAT} />
+                    <TextFormat type="date" value={plantCases.timeOpened} format={APP_DATE_FORMAT} />
                   </td>
                  
-                  <td>{plantCase.status}</td>
-                  <td>{plantCase.plant ? <Link to={`plant/${plantCase.plant.id}`}>{plantCase.plant.id}</Link> : ''}</td>
+                  <td>{plantCases.status}</td>
+                  <td>{plantCases.plant ? <Link to={`plant/${plantCases.plant.id}`}>{plantCases.plant.id}</Link> : ''}</td>
                   <td> 
                   <select onChange={(e) =>handleClick(e)}>
                   <option  key = "-1" value= "-1" ></option>
@@ -146,12 +155,12 @@ export const Dashboard = (props: IDashboardProps) => {
                     </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`plant-case/${plantCase.id}`} color="info" size="sm">
+                      <Button tag={Link} to={`plant-case/${plantCases.id}`} color="info" size="sm">
                         <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
                       </Button>
                       <Button
                         tag={Link}
-                        to={`plant-case/${plantCase.id}`}
+                        to={`plant-case/${plantCases.id}`}
                         color="primary"
                         size="sm"
                       >
@@ -159,7 +168,7 @@ export const Dashboard = (props: IDashboardProps) => {
                       </Button>
                       <Button
                         tag={Link}
-                        to={`plant-case/${plantCase.id}/delete`}
+                        to={`plant-case/${plantCases.id}/delete`}
                         color="danger"
                         size="sm"
                       >
@@ -216,26 +225,26 @@ export const Dashboard = (props: IDashboardProps) => {
            </thead>
            <tbody>
           
-             { employeeCases.map((plantCase, i) => (
+             { employeeCases.map((plantCases, i) => (
                <tr key={`entity-${i}`}>
                  
-                 <td>{plantCase.needsAttention}</td>
+                 <td>{plantCases.needsAttention}</td>
                  <td>
-                   <TextFormat type="date" value={plantCase.timeOpened} format={APP_DATE_FORMAT} />
+                   <TextFormat type="date" value={plantCases.timeOpened} format={APP_DATE_FORMAT} />
                  </td>
                 
-                 <td>{plantCase.status}</td>
-                 {(plantCase.user)? ( 
-                 <td>{plantCase.user.firstName ? <Link to={`/`}>{plantCase.user.firstName}</Link> : ''}</td>
+                 <td>{plantCases.status}</td>
+                 {(plantCases.user)? ( 
+                 <td>{plantCases.user.firstName ? <Link to={`/`}>{plantCases.user.firstName}</Link> : ''}</td>
                  ):( <div> No Employee Assigned</div>)}
                  <td className="text-right">
                    <div className="btn-group flex-btn-group-container">
-                     <Button tag={Link} to={`plant-case/${plantCase.id}`} color="info" size="sm">
+                     <Button tag={Link} to={`plant-case/${plantCases.id}`} color="info" size="sm">
                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
                      </Button>
                      <Button
                        tag={Link}
-                       to={`plant-case/${plantCase.id}`}
+                       to={`plant-case/${plantCases.id}`}
                        color="primary"
                        size="sm"
                      >
@@ -243,7 +252,7 @@ export const Dashboard = (props: IDashboardProps) => {
                      </Button>
                      <Button
                        tag={Link}
-                       to={`plant-case/${plantCase.id}/delete`}
+                       to={`plant-case/${plantCases.id}/delete`}
                        color="danger"
                        size="sm"
                      >
@@ -307,35 +316,34 @@ export const Dashboard = (props: IDashboardProps) => {
            </thead>
            <tbody>
            
-             { assignedCases.map((plantCase, i) => (
+             { assignedCases.map((plantCases, i) => (
                <tr key={`entity-${i}`}>
                  
-                 <td>{plantCase.needsAttention}</td>
+                 <td>{plantCases.needsAttention}</td>
                  <td>
-                   <TextFormat type="date" value={plantCase.timeOpened} format={APP_DATE_FORMAT} />
+                   <TextFormat type="date" value={plantCases.timeOpened} format={APP_DATE_FORMAT} />
                  </td>
                 
-                 <td>{plantCase.status}</td>
-                 <td>{plantCase.plant ? <Link to={`plant/${plantCase.plant.id}`}>{plantCase.plant.id}</Link> : ''}</td>
-                {plantCase.plant ? ( 
-                <td>{plantCase.plant.customer.address},{plantCase.plant.customer.city}, {plantCase.plant.customer.postcode}</td>
+                 <td>{plantCases.status}</td>
+                 <td>{plantCases.plant ? <Link to={`plant/${plantCases.plant.id}`}>{plantCases.plant.id}</Link> : ''}</td>
+                {plantCases.plant ? ( 
+                <td>{plantCases.plant.customer.address},{plantCases.plant.customer.city}, {plantCases.plant.customer.postcode}</td>
                 ):(<td> Missing Plant or Customer Refrence </td>)}
                  <td className="text-right">
                    <div className="btn-group flex-btn-group-container">
-                     <Button tag={Link} to={`plant-case/${plantCase.id}`} color="info" size="sm">
+                     <Button tag={Link} to={`plant-case/${plantCases.id}`} color="info" size="sm">
                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
                      </Button>
                      <Button
                        tag={Link}
-                       to={`plant-case/${plantCase.id}`}
+                       to={`plant-case/${plantCases.id}`}
                        color="primary"
                        size="sm"
                      >
                        <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
                      </Button>
-                     <Button
-                       tag={Link}
-                       to={`plant-case/${plantCase.id}/delete`}
+                     <Button 
+                       onClick = {()=> completeCase(i)}
                        color="secondary"
                        size="sm"
                      >
