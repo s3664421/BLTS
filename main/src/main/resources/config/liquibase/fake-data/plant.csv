@@ -1,11 +1,11 @@
-id;name;description;location;sensor_id
-1;Amaryllis;Bulb flowering type plants that produce a cluster of attractive trumpet like flowers in different color variations.;CEO Office;1
-2;Beach Spider Lily;"This amazing bulb based plant ""beach spider lily"" enjoys environments that are downright aquatic and easy to maintain.";J Block;2
-3;Flaming Sword;This species features a red sword like flower head which can grow up to 2ft tall and attractive mottled leaves.;Upstairs;3
-4;Eternal Flame;Named Eternal flame for its attractive yellow bract.;V25;4
-5;Flowering Maple Plant;The flowering maple (scientific name: Abutilon hybridum) is part of a large plant genus of flowering and foliage type plants.;Office 5;5
-6;Bird Of Paradise;The Bird of Paradise is a delightfully easy to care for plant that enjoys warm, balmy days year round.;Room 21;6
-7;Lollipop Plant;The lollipop plant (Botanical name: Pachystachys Lutea) is a sub-tropical species that produces small white flowers from a beautiful cone shaped bract.;Meeting Room 3;7
-8;Rose Of China;All about the Rose of China (botanical name Hibiscus Rosa-Sinensis ) . Caring, information and advice.;Lunchroom;8
-9;Lycaste Orchid;There are around 30 species of Lycaste and many of these are hardy and easily obtainable.;Café;9
-10;Calla Lily;Keeping this rhizome happy indoors is a matter of paying attention to some very basic growing conditions.;Staff Office;10
+id;name;description;location;sensor_id;plantthresholds_id;customer_id;avg_temp;avg_humidity;avg_light;avg_moisture
+18;Amaryllis;Bulb flowering type plants that produce a cluster of attractive trumpet like flowers in different color variations.;CEO Office;1;8;28;23.6;0.875;8695;0.48
+19;Beach Spider Lily;This amazing bulb based plant beach spider lily enjoys environments that are downright aquatic and easy to maintain.;J Block;2;9;28;31.6;0.78;9120;0.56
+20;Flaming Sword;This species features a red sword like flower head which can grow up to 2ft tall and attractive mottled leaves.;Upstairs;3;10;28;21.98;0.941;9245;0.34
+21;Eternal Flame;Named Eternal flame for its attractive yellow bract.;V25;4;11;28;36.5;0.753;7944;0.431
+22;Flowering Maple Plant;The flowering maple (scientific name: Abutilon hybridum) is part of a large plant genus of flowering and foliage type plants.;Office 5;5;12;28;29.6;0.824;9376;0.42
+23;Bird Of Paradise;The Bird of Paradise is a delightfully easy to care for plant that enjoys warm balmy days year round.;Room 21;6;13;28;27.43;0.854;9322;0.44
+24;Lollipop Plant;The lollipop plant (Botanical name: Pachystachys Lutea) is a sub-tropical species that produces small white flowers from a beautiful cone shaped bract.;Meeting Room 3;7;14;29;26.8;0.798;8937;0.64
+25;Rose Of China;All about the Rose of China (botanical name Hibiscus Rosa-Sinensis ) . Caring information and advice.;Lunchroom;8;15;29;24.3;0.735;8831;0.56
+26;Lycaste Orchid;There are around 30 species of Lycaste and many of these are hardy and easily obtainable.;Café;9;16;29;22.8;0.937;9271;0.48
+27;Calla Lily;Keeping this rhizome happy indoors is a matter of paying attention to some very basic growing conditions.;Staff Office;10;17;29;21.05;0.918;9391;0.476
