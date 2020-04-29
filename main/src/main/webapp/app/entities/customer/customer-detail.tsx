@@ -21,14 +21,14 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
     props.getAllPlants(props.match.params.id); // Step 12: Can now use function
   }, []);
 
-  const { customerEntity, plant, match } = props;
+  const { customerEntity, plant} = props;
   return (
     <div className="customer-outerbox">
       <Row>
         <Col>
           <div className="customer-upinnerbox">
             <h2>
-              Customer <b>{customerEntity.id}</b>
+              {customerEntity.user ? ( <h2> Customer: {customerEntity.user.firstName} {customerEntity.user.lastName}</h2>) : ( <div> No user reference found</div>)}
             </h2>
             <dl className="jh-entity-details">
               <dt>
