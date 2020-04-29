@@ -40,6 +40,8 @@ export const App = (props: IAppProps) => {
           <Header
             isAuthenticated={props.isAuthenticated}
             isAdmin={props.isAdmin}
+            isManager ={props.isManager}
+            isEmployee={props.isEmployee}
             ribbonEnv={props.ribbonEnv}
             isInProduction={props.isInProduction}
             isSwaggerEnabled={props.isSwaggerEnabled}
@@ -61,6 +63,8 @@ export const App = (props: IAppProps) => {
 const mapStateToProps = ({ authentication, applicationProfile }: IRootState) => ({
   isAuthenticated: authentication.isAuthenticated,
   isAdmin: hasAnyAuthority(authentication.account.authorities, [AUTHORITIES.ADMIN]),
+  isManager: hasAnyAuthority(authentication.account.authorities, [AUTHORITIES.MANAGER]),
+  isEmployee: hasAnyAuthority(authentication.account.authorities,[AUTHORITIES.EMPLOYEE]),
   ribbonEnv: applicationProfile.ribbonEnv,
   isInProduction: applicationProfile.inProduction,
   isSwaggerEnabled: applicationProfile.isSwaggerEnabled

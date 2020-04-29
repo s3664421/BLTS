@@ -8,12 +8,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NavLink as Link } from 'react-router-dom';
 import LoadingBar from 'react-redux-loading-bar';
 
-import { Home, Brand } from './header-components';
+import { Home, Brand, Customers, Cases, Plants } from './header-components';
 import { AdminMenu, EntitiesMenu, AccountMenu } from '../menus';
 
 export interface IHeaderProps {
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isManager: boolean;
+  isEmployee: boolean;
   ribbonEnv: string;
   isInProduction: boolean;
   isSwaggerEnabled: boolean;
@@ -40,10 +42,14 @@ const Header = (props: IHeaderProps) => {
       <Navbar dark expand="sm" fixed="top" className="bg-primary">
         <NavbarToggler aria-label="Menu" onClick={toggleMenu} />
         <Brand />
+        
         <Collapse isOpen={menuOpen} navbar>
           <Nav id="header-tabs" className="ml-auto" navbar>
             {props.isAuthenticated &&<Home />}
-            {props.isAuthenticated && <EntitiesMenu />}
+            {props.isAuthenticated && props.isAdmin && <EntitiesMenu />}
+            {props.isAuthenticated && props.isManager && <Customers/>}
+            {props.isAuthenticated && props.isManager && <Plants/>}
+            {props.isAuthenticated && props.isManager && <Cases/>}
             {props.isAuthenticated && props.isAdmin && (
               <AdminMenu showSwagger={props.isSwaggerEnabled} showDatabase={!props.isInProduction} />
             )}

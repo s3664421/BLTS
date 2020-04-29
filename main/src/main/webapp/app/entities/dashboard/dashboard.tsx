@@ -68,7 +68,7 @@ export const Dashboard = (props: IDashboardProps) => {
       <h2 id="dashboard-heading">
         Dashboard 
       </h2>
-      { isAdmin ? (
+      { isManager ? (
          <div> 
            <p> Manager Dashboard</p>
            <Alert color="success">Welcome {account.login}.</Alert> 
@@ -317,9 +317,9 @@ export const Dashboard = (props: IDashboardProps) => {
                 
                  <td>{plantCase.status}</td>
                  <td>{plantCase.plant ? <Link to={`plant/${plantCase.plant.id}`}>{plantCase.plant.id}</Link> : ''}</td>
-                
+                {plantCase.plant ? ( 
                 <td>{plantCase.plant.customer.address},{plantCase.plant.customer.city}, {plantCase.plant.customer.postcode}</td>
-
+                ):(<td> Missing Plant or Customer Refrence </td>)}
                  <td className="text-right">
                    <div className="btn-group flex-btn-group-container">
                      <Button tag={Link} to={`plant-case/${plantCase.id}`} color="info" size="sm">
@@ -355,11 +355,19 @@ export const Dashboard = (props: IDashboardProps) => {
 
             </div>
             
-           ):(
-            <div>User DashBoard
+           ):( isAdmin ? (
+            <div>Admin Dashboard
 
 
             </div>
+
+           ):
+           (
+            <div>
+              User Dashboard
+            </div>
+           )
+           
            )
          
         )}

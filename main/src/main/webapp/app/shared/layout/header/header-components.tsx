@@ -29,4 +29,35 @@ export const Home = props => (
   </NavItem>
 );
 
+export const Customers = props => (
+<NavItem>
+    <NavLink tag={Link} to="/customer" className="d-flex align-items-center">
+      <FontAwesomeIcon icon="list" />
+      <span>Customers</span>
+    </NavLink>
+  </NavItem>
+
+);
+
+export const Cases = props => (
+  <NavItem>
+      <NavLink tag={Link} to="/plant-case" className="d-flex align-items-center">
+        <FontAwesomeIcon icon="book" />
+        <span>Cases</span>
+      </NavLink>
+    </NavItem>
+  
+  );
+
+  export const Plants = props => (
+    <NavItem>
+        <NavLink tag={Link} to="/plant" className="d-flex align-items-center">
+          <FontAwesomeIcon icon="leaf" />
+          <span>Plants</span>
+        </NavLink>
+      </NavItem>
+    
+    );
+  
+
 
