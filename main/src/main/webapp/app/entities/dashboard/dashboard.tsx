@@ -46,8 +46,11 @@ export const Dashboard = (props: IDashboardProps) => {
    const entitys = {
      ...unassignedCases[event.target.options[event.target.selectedIndex].dataset.plant]
    };
+   const userfilt = users.filter(function(user) {
+    return user.authorities.includes(AUTHORITIES.EMPLOYEE);
+   });
 
-   entitys.user = users[event.target.value];
+   entitys.user = userfilt[event.target.value];
    entitys.status = CaseStatus.ASSIGNED;
    if(props.updateEntity(entitys))
    {
