@@ -19,6 +19,6 @@ public interface PlantCaseRepository extends JpaRepository<PlantCase, Long> {
     List<PlantCase> findByStatus(CaseStatus status);
     @Query("select plantCase from PlantCase plantCase where plantCase.user.login = ?#{principal.username}")
     List<PlantCase> findByUserIsCurrentUser();
-    List<PlantCase> findByUserId(Long id);
+    List<PlantCase> findByUserIdAndStatus(Long id, CaseStatus status);
 
 }

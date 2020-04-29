@@ -134,7 +134,7 @@ public class PlantCaseResource {
     @GetMapping("/plant-case/assigned/{id}")
     public List<PlantCase>getAssignedCasesToEmployee(@PathVariable Long id) {
         log.debug("REST request to get a page of PlantCases that are assigned to employee with id:", id);
-        return plantCaseRepository.findByUserId(id);
+        return plantCaseRepository.findByUserIdAndStatus(id, CaseStatus.ASSIGNED);
     }
     /**
      * {@code GET  /plant-cases/:id} : get the "id" plantCase.
