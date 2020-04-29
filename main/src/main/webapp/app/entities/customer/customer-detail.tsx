@@ -28,7 +28,7 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
         <Col>
           <div className="customer-upinnerbox">
             <h2>
-              Customer [<b>{customerEntity.id}</b>]
+              Customer <b>{customerEntity.id}</b>
             </h2>
             <dl className="jh-entity-details">
               <dt>
@@ -47,7 +47,10 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
                 <span id="phoneNo">Phone No: <span className="customerResult">{customerEntity.phoneNo}</span></span>
               </dt>
               <dt>
-                <span id="custUser">User: <span className="customerResult">{customerEntity.user ? customerEntity.user.login : ''}</span></span>
+                <span id="totalPlants">Total number of plants: <span className="customerResult">{plant.length}</span></span>
+              </dt>
+              <dt>
+                <span id="custUser">User type: <span className="customerResult">{customerEntity.user ? customerEntity.user.login : ''}</span></span>
               </dt>
             </dl>
             <Button tag={Link} to="/customer" replace color="info">

@@ -6,18 +6,20 @@ Note: ID = #, className = .
   color: black;
   font-weight: bold;
   text-align: center;
+  margin-bottom: 25px;
 }
 
 .customer-upinnerbox h2 {
   color: black;
   font-weight: bold;
   text-align: center;
+  margin-bottom: 15px;
 }
 
 .customerResult {
   font-weight: normal;
   font-size: 20px;
-  line-height: 20px;
+  line-height: 35px;
 }
 
 .customer-upinnerbox #address,
@@ -25,10 +27,20 @@ Note: ID = #, className = .
 #city,
 #state,
 #phoneNo,
-#custUser {
+#custUser,
+#totalPlants {
   color: black;
   text-align: center;
   font-size: 20px;
+}
+
+.customer-upinnerbox,
+.customer-loinnerbox {
+  background-color: white;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 1em;
+  border-radius: 1em;
 }
 
 /*
