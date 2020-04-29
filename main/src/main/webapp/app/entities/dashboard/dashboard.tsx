@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table, Alert, Container, Label, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Button, Col, Row, Table, Alert, Container,Jumbotron, Label, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { ICrudGetAllAction, TextFormat, getSortState, IPaginationBaseState, JhiPagination, JhiItemCount } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { updateEntity } from '../plant-case/plant-case.reducer';
 import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
 import { CaseStatus } from 'app/shared/model/enumerations/case-status.model';
 import { IRootState } from 'app/shared/reducers';
-import { getEntities, getUnassignedCases, getCaseForEmployee, getAllActiveCases} from './dashboard.reducer';
+import { getUnassignedCases, getCaseForEmployee, getAllActiveCases, getAllPlants, getCustomer} from './dashboard.reducer';
 import { IDashboard } from 'app/shared/model/dashboard.model';
+import { ICustomer } from 'app/shared/model/customer.model'
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT, AUTHORITIES } from 'app/config/constants';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
 import { IUser } from 'app/shared/model/user.model';
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
+import { getEntity } from 'app/entities/customer/customer.reducer';
 import plant from '../plant/plant';
 import { EventEmitter } from 'events';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 export interface IPlantCaseProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+export interface ICustomerProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
 export const Dashboard = (props: IDashboardProps) => {
 
-  const { dashboardList, match, loading, loadingPlantCase, isAdmin, isManager, isCustomer, isEmployee, account, unassignedCases, employeeCases, users, assignedCases } = props;
+  const { dashboardList, match, loading, loadingPlantCase, customerEntity, customer, isAdmin, isManager, isCustomer, isEmployee, account, unassignedCases, employeeCases, users, assignedCases, customerPlants } = props;
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
@@ -31,6 +34,11 @@ export const Dashboard = (props: IDashboardProps) => {
     props.getAllActiveCases(props.account);
     props.getUsers();
     props.getCaseForEmployee(props.account.id);
+    if(isCustomer)
+    {
+      props.getCustomer(props.account.id)
+    }
+    
   }, []);
 
   const handleClick = (event) => {
@@ -83,7 +91,7 @@ export const Dashboard = (props: IDashboardProps) => {
       { isManager ? (
          <div> 
            <p> Manager Dashboard</p>
-           <Alert color="success">Welcome {account.login}.</Alert> 
+           <Alert color="success">Welcome {account.firstName}.</Alert> 
            <div>
 
            <Container>
@@ -377,7 +385,39 @@ export const Dashboard = (props: IDashboardProps) => {
            ):
            (
             <div>
-              User Dashboard
+           <Jumbotron>
+               <h1 className="display-3">Hello {props.account.firstName}</h1>
+              <p className="lead">Coming to take a quick look at your plants?</p>
+                <hr className="my-2" />
+              <p className="lead"> Look below to see all your plants, we will let you know if someones booked to check them out</p>
+      </Jumbotron>
+          <div className="customer-loinnerbox">
+            {customer.plants && customer.plants.length > 0 ? (
+              <Table responsive>
+                <thead>
+                  <tr>
+                    <th>Plant Name</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {customer.plants.map((plantReading, i) => (
+                    <tr key={`entity-${i}`}>
+                      <td>
+                        <Button tag={Link} to={`/plant/${plantReading.id}`} color="link" size="sm">
+                        {plantReading.name}
+                        </Button>
+                      </td>
+                      <td>{plantReading.location}</td>
+                      <td>{plantReading.plantcases ? (<b> Someones on their way to check this one out!</b>): (<b>Doing great!</b>)} </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>) : (
+              <div className="alert alert-warning">No Data Found</div>
+            )}
+          </div>
             </div>
            )
            
@@ -391,7 +431,7 @@ export const Dashboard = (props: IDashboardProps) => {
   );
 };
 
-const mapStateToProps = ({ userManagement, dashboard, authentication }: IRootState) => ({
+const mapStateToProps = ({ userManagement, dashboard, customer, authentication }: IRootState) => ({
   dashboardList: dashboard.entities,
   loading: dashboard.loading,
   isAdmin: hasAnyAuthority(authentication.account.authorities, [AUTHORITIES.ADMIN]),
@@ -403,17 +443,22 @@ const mapStateToProps = ({ userManagement, dashboard, authentication }: IRootSta
   employeeCases: dashboard.employeeCases,
   users : userManagement.users,
   loadingPlantCase: dashboard.loading,
-  assignedCases: dashboard.assignedCases
+  assignedCases: dashboard.assignedCases,
+  customerPlants: dashboard.customerPlants,
+  customerEntity : customer.entity,
+  customer : dashboard.customer
   
 });
 
 const mapDispatchToProps = {
-  getEntities, 
+  getEntity, 
   getUnassignedCases,
   getAllActiveCases,
   getUsers, 
   updateEntity,
-  getCaseForEmployee
+  getCaseForEmployee,
+  getCustomer,
+  getAllPlants
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

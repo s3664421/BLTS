@@ -104,6 +104,21 @@ public class CustomerResource {
         return ResponseUtil.wrapOrNotFound(customer);
     }
 
+    
+    /**
+     * {@code GET  /customers/user/:id} : get customer by user "id" 
+     *
+     * @param id the id of the customer to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the customer, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/customers/user/{id}")
+    public Customer getCustomerByUserId(@PathVariable Long id) {
+        log.debug("REST request to get Customer with user ID : {}", id);
+            Customer customer = customerRepository.findByUserId(id);
+            log.debug(customer.getPlants().iterator().next().getPlantcases().toString());
+        return customer;
+    }
+
     /**
      * {@code DELETE  /customers/:id} : delete the "id" customer.
      *

@@ -145,7 +145,7 @@ public class PlantResource {
 
     // BH: Need to implment function for customer to plant function
     @GetMapping("plants/customer/{customerID}")
-    public ResponseEntity<List<Plant>> getPlantByCustomerID(@PathVariable String customerID) {
+    public ResponseEntity<List<Plant>> getPlantByCustomerID(@PathVariable Long customerID) {
         log.debug("REST request to get all plants for customerID : {}", customerID);
         Optional<List<Plant>> plant = plantRepository.findByCustomerID(customerID);
         return ResponseUtil.wrapOrNotFound(plant);
