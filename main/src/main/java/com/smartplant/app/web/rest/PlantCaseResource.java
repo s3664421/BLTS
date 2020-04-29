@@ -80,7 +80,7 @@ public class PlantCaseResource {
         if (plantCase.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-
+        
         if (plantCase.getStatus() == CaseStatus.ASSIGNED && plantCase.getUser() == null) {
             throw new BadRequestAlertException("Cannot Assign Case with no employee: ", ENTITY_NAME, "no employee selected to assign to");
         }
@@ -126,6 +126,16 @@ public class PlantCaseResource {
         return plantCaseRepository.findByStatus(CaseStatus.OPEN);
     }
 
+       /**
+     * {@code GET  /assigned/employeeid} : get all assigned plant cases
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of plantCases in body.
+     */
+    @GetMapping("/plant-case/assigned/{id}")
+    public List<PlantCase>getAssignedCasesToEmployee(@PathVariable Long id) {
+        log.debug("REST request to get a page of PlantCases that are assigned to employee with id:", id);
+        return plantCaseRepository.findByUserId(id);
+    }
     /**
      * {@code GET  /plant-cases/:id} : get the "id" plantCase.
      *
