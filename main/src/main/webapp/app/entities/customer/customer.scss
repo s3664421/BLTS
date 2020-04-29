@@ -1,8 +1,37 @@
 /*****************************
 Note: ID = #, className = .
-Will have to change the name of div's if i only want to apply it to a specific page
 ******************************/
 
+.customer-loinnerbox h4 {
+  color: black;
+  font-weight: bold;
+  text-align: center;
+}
+
+.customer-upinnerbox h2 {
+  color: black;
+  font-weight: bold;
+  text-align: center;
+}
+
+.customerResult {
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.customer-upinnerbox #address,
+#postcode,
+#city,
+#state,
+#phoneNo,
+#custUser {
+  color: black;
+  text-align: center;
+  font-size: 20px;
+}
+
+/*
 #customer-heading {
   font-weight: bold;
 }
@@ -56,6 +85,7 @@ Will have to change the name of div's if i only want to apply it to a specific p
 
 .customer-loinnerbox {
   background-color: white;
+  margin-top: 10px;
   margin-bottom: 10px;
   padding: 1em;
   border-radius: 1em;
@@ -74,4 +104,13 @@ Will have to change the name of div's if i only want to apply it to a specific p
 #phoneNo,
 #custUser {
   color: black;
+  text-align: center;
+  font-size: 20px;
+  // padding: 5em;
 }
+
+.customerResult{
+    font-weight: normal;
+    font-size: 20px;
+}
+*/

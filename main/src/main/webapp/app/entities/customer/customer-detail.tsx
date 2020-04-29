@@ -21,40 +21,34 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
     props.getAllPlants(props.match.params.id); // Step 12: Can now use function
   }, []);
 
-  const { customerEntity, plant } = props;
+  const { customerEntity, plant, match } = props;
   return (
     <div className="customer-outerbox">
       <Row>
-        <Col md="12">
+        <Col>
           <div className="customer-upinnerbox">
             <h2>
               Customer [<b>{customerEntity.id}</b>]
             </h2>
             <dl className="jh-entity-details">
               <dt>
-                <span id="address">Address</span>
+                <span id="address">Address: <span className="customerResult">{customerEntity.address}</span></span>
               </dt>
-              <dd>{customerEntity.address}</dd>
               <dt>
-                <span id="postcode">Postcode</span>
+                <span id="postcode">Postcode: <span className="customerResult">{customerEntity.postcode}</span></span>
               </dt>
-              <dd>{customerEntity.postcode}</dd>
               <dt>
-                <span id="city">City</span>
+                <span id="city">City: <span className="customerResult">{customerEntity.city}</span></span>
               </dt>
-              <dd>{customerEntity.city}</dd>
               <dt>
-                <span id="state">State</span>
+                <span id="state">State: <span className="customerResult">{customerEntity.state}</span></span>
               </dt>
-              <dd>{customerEntity.state}</dd>
               <dt>
-                <span id="phoneNo">Phone No</span>
+                <span id="phoneNo">Phone No: <span className="customerResult">{customerEntity.phoneNo}</span></span>
               </dt>
-              <dd>{customerEntity.phoneNo}</dd>
               <dt>
-                <span id="custUser">User</span>
+                <span id="custUser">User: <span className="customerResult">{customerEntity.user ? customerEntity.user.login : ''}</span></span>
               </dt>
-              <dd>{customerEntity.user ? customerEntity.user.login : ''}</dd>
             </dl>
             <Button tag={Link} to="/customer" replace color="info">
               <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
@@ -65,7 +59,7 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
             </Button>
           </div>
         </Col>
-        <Col md="12">
+        <Col>
           <div className="customer-loinnerbox">
             <h4>
               Customers Plant List
@@ -82,7 +76,11 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
                 <tbody>
                   {plant.map((plantReading, i) => (
                     <tr key={`entity-${i}`}>
-                      <td>{plantReading.name}</td>
+                      <td>
+                        <Button tag={Link} to={`/plant/${plantReading.id}`} color="link" size="sm">
+                        {plantReading.name}
+                        </Button>
+                      </td>
                       <td>{plantReading.sensorID}</td>
                       <td>{plantReading.location}</td>
                     </tr>

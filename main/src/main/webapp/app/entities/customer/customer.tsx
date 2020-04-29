@@ -1,4 +1,4 @@
-import './customer.scss';
+// import './customer.scss';
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
