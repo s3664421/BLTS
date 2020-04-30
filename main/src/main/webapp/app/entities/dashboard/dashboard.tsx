@@ -415,7 +415,7 @@ export const Dashboard = (props: IDashboardProps) => {
                         </Button>
                       </td>
                       <td>{plantReading.location}</td>
-                      <td>{plantReading.plantcases ? (<b> Someones on their way to check this one out!</b>): (<b>Doing great!</b>)} </td>
+                      <td>{plantReading.plantcases ? (<b><FontAwesomeIcon icon = "heartbeat"/> Someones on their way to check this one out!</b>): (<FontAwesomeIcon icon = "heart"/>)} </td>
                     </tr>
                   ))}
                 </tbody>
