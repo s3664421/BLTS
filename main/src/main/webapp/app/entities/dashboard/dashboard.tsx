@@ -30,13 +30,16 @@ export const Dashboard = (props: IDashboardProps) => {
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
   useEffect(() => {
+    
     props.getUnassignedCases(props.account);
     props.getAllActiveCases(props.account);
     props.getUsers();
     props.getCaseForEmployee(props.account.id);
-    if(isCustomer)
+    
+    if(isCustomer )
     {
-      props.getCustomer(props.account.id)
+      //alert(props.account.id);
+     props.getCustomer(props.account.id)
     }
     
   }, []);
@@ -383,14 +386,16 @@ export const Dashboard = (props: IDashboardProps) => {
             </div>
 
            ):
-           (
+           ( isCustomer ?( 
+
+           (customer ? (
             <div>
            <Jumbotron>
                <h1 className="display-3">Hello {props.account.firstName}</h1>
               <p className="lead">Coming to take a quick look at your plants?</p>
                 <hr className="my-2" />
               <p className="lead"> Look below to see all your plants, we will let you know if someones booked to check them out</p>
-      </Jumbotron>
+            </Jumbotron>
           <div className="customer-loinnerbox">
             {customer.plants && customer.plants.length > 0 ? (
               <Table responsive>
@@ -417,13 +422,16 @@ export const Dashboard = (props: IDashboardProps) => {
               </Table>) : (
               <div className="alert alert-warning">No Data Found</div>
             )}
-          </div>
+          
             </div>
-           )
+            </div>
+            ):(<div>No refrence to customer found</div>))
+           ):(
+           <div>Welcome User</div>))))
            
-           )
+    
          
-        )}
+        }
 
 
     
