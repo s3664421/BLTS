@@ -1,4 +1,5 @@
 /* eslint no-console: off */
+import 'rc-datetime-picker/dist/picker.css';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -12,31 +13,22 @@ import { IPlant } from 'app/shared/model/plant.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
 import { LineGraph } from 'app/shared/graphing/line-graph-gradient';
+import moment from 'moment';
+import { DatetimePickerTrigger } from 'rc-datetime-picker';
 
 export interface IPlantDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 export interface IDataReadingDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const PlantDetail = (props: IPlantDetailProps) => {
 
-  const previousMonth = (): string => {
-    const now: Date = new Date();
-    const fromDate =
-      now.getMonth() === 0
-        ? new Date(now.getFullYear() - 1, 11, now.getDate())
-        : new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-    return fromDate.toISOString().slice(0, 10);
-  };
-  
-  const today = (): string => {
-    // Today + 1 day - needed if the current day must be included
-    const day: Date = new Date();
-    day.setDate(day.getDate() + 1);
-    const toDate = new Date(day.getFullYear(), day.getMonth(), day.getDate());
-    return toDate.toISOString().slice(0, 10);
-  };
+  const { plantEntity, dataReadings, loading} = props;
+  const temps = [];
+  const humids = [];
+  const lights = [];
+  const moist = [];
 
-  const [fromDate, setFromDate] = useState(previousMonth());
-  const [toDate, setToDate] = useState(today());
+  const [fromDate, setFromDate] = useState(moment().subtract(1, 'weeks'));
+  const [toDate, setToDate] = useState(moment());
 
   useEffect(() => {
     props.getEntity(props.match.params.id);
@@ -48,18 +40,18 @@ export const PlantDetail = (props: IPlantDetailProps) => {
   }, [fromDate, toDate]);
 
   const getDataReadingsRange = () => {
-    props.getAllDataReading(props.match.params.id, fromDate, toDate);
+    props.getAllDataReading(props.match.params.id, fromDate.format(), toDate.format());
   }
 
-  const onChangeFromDate = evt => setFromDate(evt.target.value);
+  const onChangeFromDate = (date) => {
+    setFromDate(date);
+    // console.log("fromDate: ", fromDate.format());
+  }
 
-  const onChangeToDate = evt => setToDate(evt.target.value);
-
-  const { plantEntity, dataReadings, loading } = props;
-  const temps = [];
-  const humids = [];
-  const lights = [];
-  const moist = [];
+  const onChangeToDate = (date) => {
+    setToDate(date);
+    // console.log("toDate: ", toDate.format());
+  }
 
   //Map data reading values into individual arrays
   //of timestamps and values
@@ -111,9 +103,25 @@ export const PlantDetail = (props: IPlantDetailProps) => {
           <dd>{plantEntity.customer ? plantEntity.customer.id : ''}</dd>
         </dl>
         <span>Data Readings From</span>
-        <Input type="datetime-local" value={fromDate} onChange={onChangeFromDate} name="fromDate" id="fromDate" />
+        <DatetimePickerTrigger
+          moment={fromDate}
+          onChange={onChangeFromDate}
+          appendToBody="true">
+          <input type="text" value={fromDate.format('YYYY-MM-DD HH:mm')} readOnly />
+          <Button size="sm" color="info">
+            <FontAwesomeIcon icon="calendar" />
+          </Button>
+        </DatetimePickerTrigger>
         <span>To</span>
-        <Input type="datetime-local" value={toDate} onChange={onChangeToDate} name="toDate" id="toDate" />
+        <DatetimePickerTrigger
+          moment={toDate}
+          onChange={onChangeToDate}
+          appendToBody="true">
+          <input type="text" value={toDate.format('YYYY-MM-DD HH:mm')} readOnly />
+          <Button size="sm" color="info">
+            <FontAwesomeIcon icon="calendar" />
+          </Button>
+        </DatetimePickerTrigger>
         <Button tag={Link} to="/plant" replace color="info">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
         </Button>
