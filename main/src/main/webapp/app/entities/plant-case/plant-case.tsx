@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
+import { Button, Col, Row, Table, Container, Jumbotron, InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import { ICrudGetAllAction, TextFormat, getSortState, IPaginationBaseState, JhiPagination, JhiItemCount } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -45,16 +45,34 @@ export const PlantCase = (props: IPlantCaseProps) => {
       activePage: currentPage
     });
 
+    const [searchVal, setSearchVal] = useState("");
+  const updateSearchVal = (event) => setSearchVal(event.target.value);
+
+  const searchByValue =(arrayTosearch, string) =>
+  {
+     //return array.filter(o => { return Object.keys(o).some(k => { if(typeof o[k] === 'string') return o[k].toLowerCase().includes(string.toLowerCase()); }); });
+     return arrayTosearch.filter((data) =>  JSON.stringify(data).toLowerCase().includes(string.toLowerCase())); 
+     
+  }
   const { plantCaseList, match, loading, totalItems } = props;
   return (
     <div>
-      <h2 id="plant-case-heading">
-        Plant Cases
-        <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
-          <FontAwesomeIcon icon="plus" />
-          &nbsp; Create new Plant Case
-        </Link>
-      </h2>
+      <Container> 
+      <Jumbotron>
+               <h2>Plant Cases</h2>
+               <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
+                  <FontAwesomeIcon icon="plus" />
+                   &nbsp; Create new Plant Case
+                </Link>
+      </Jumbotron>
+
+      <InputGroup>
+        <InputGroupAddon addonType="prepend">
+          <InputGroupText>Search Cases</InputGroupText>
+        </InputGroupAddon>
+        <Input value = {searchVal} onChange = {updateSearchVal} />
+      </InputGroup>
+
       <div className="table-responsive">
         {plantCaseList && plantCaseList.length > 0 ? (
           <Table responsive>
@@ -78,7 +96,7 @@ export const PlantCase = (props: IPlantCaseProps) => {
                 <th className="hand" onClick={sort('caseNotes')}>
                   Case Notes <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
+                <th  className="hand" onClick={sort('user')}>
                   User <FontAwesomeIcon icon="sort" />
                 </th>
                 <th>
@@ -88,7 +106,7 @@ export const PlantCase = (props: IPlantCaseProps) => {
               </tr>
             </thead>
             <tbody>
-              {plantCaseList.map((plantCase, i) => (
+              {searchByValue(plantCaseList, searchVal).map((plantCase, i) => (
                 <tr key={`entity-${i}`}>
                   <td>
                     <Button tag={Link} to={`${match.url}/${plantCase.id}`} color="link" size="sm">
@@ -104,7 +122,7 @@ export const PlantCase = (props: IPlantCaseProps) => {
                   </td>
                   <td>{plantCase.status}</td>
                   <td>{plantCase.caseNotes}</td>
-                  <td>{plantCase.user ? plantCase.user.login : ''}</td>
+              <td>{plantCase.user ? (<div> {plantCase.user.firstName} {" "} {plantCase.user.lastName}</div>) : ''}</td>
                   <td>{plantCase.plant ? <Link to={`plant/${plantCase.plant.id}`}>{plantCase.plant.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
@@ -151,6 +169,7 @@ export const PlantCase = (props: IPlantCaseProps) => {
           />
         </Row>
       </div>
+      </Container>
     </div>
   );
 };

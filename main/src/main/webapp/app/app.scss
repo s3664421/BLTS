@@ -303,6 +303,9 @@ Metrics and Health styles
   margin-left: -50px;
 }
 
+.allow-new-line{
+  white-space: pre-wrap;
+}
 .health-details {
   min-width: 400px;
 }
