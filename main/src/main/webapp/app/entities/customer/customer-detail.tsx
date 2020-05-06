@@ -2,7 +2,7 @@ import './customer.scss';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Table } from 'reactstrap';
+import { Button, Row, Col, Table, Container, Jumbotron } from 'reactstrap';
 import { ICrudGetAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -24,15 +24,21 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
   const { customerEntity, plant} = props;
   return (
     <div className="customer-outerbox">
+      <Container> 
       <Row>
         <Col>
-          <div className="customer-upinnerbox">
-            <h2>
-              {customerEntity.user ? ( <h2> Customer: {customerEntity.user.firstName} {customerEntity.user.lastName}</h2>) : ( <div> No user reference found</div>)}
-            </h2>
+        <Jumbotron>
+          <Row>
+            <Col> 
+            <h2>{customerEntity.user ? ( <h2> Customer: {customerEntity.user.firstName} {customerEntity.user.lastName}</h2>) : ( <div> No user reference found</div>)}</h2>
+               <hr></hr>
+               <h4> Total number of plants: {plant.length}</h4>
+            </Col>
+            <Col> 
+          <div >
             <dl className="jh-entity-details">
               <dt>
-                <span id="address">Address: <span className="customerResult">{customerEntity.address}</span></span>
+                <span id="postcode">Address: <span className="customerResult">{customerEntity.address}</span></span>
               </dt>
               <dt>
                 <span id="postcode">Postcode: <span className="customerResult">{customerEntity.postcode}</span></span>
@@ -46,12 +52,6 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
               <dt>
                 <span id="phoneNo">Phone No: <span className="customerResult">{customerEntity.phoneNo}</span></span>
               </dt>
-              <dt>
-                <span id="totalPlants">Total number of plants: <span className="customerResult">{plant.length}</span></span>
-              </dt>
-              <dt>
-                <span id="custUser">User type: <span className="customerResult">{customerEntity.user ? customerEntity.user.login : ''}</span></span>
-              </dt>
             </dl>
             <Button tag={Link} to="/customer" replace color="info">
               <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
@@ -61,12 +61,20 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
               <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
             </Button>
           </div>
+          </Col>
+          </Row>
+              
+         </Jumbotron>
+         
         </Col>
+        </Row> 
+        <Row>
+          
         <Col>
-          <div className="customer-loinnerbox">
-            <h4>
+        <h4>
               Customers Plant List
             </h4>
+          <div className="customer-loinnerbox">
             {plant && plant.length > 0 ? (
               <Table responsive>
                 <thead>
@@ -95,6 +103,7 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
           </div>
         </Col>
       </Row>
+      </Container>
     </div>
   );
 };
