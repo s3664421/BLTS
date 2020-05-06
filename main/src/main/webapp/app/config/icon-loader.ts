@@ -31,6 +31,7 @@ import { faCloud } from '@fortawesome/free-solid-svg-icons/faCloud';
 import { faLeaf } from '@fortawesome/free-solid-svg-icons/faLeaf';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import {faHeartbeat } from '@fortawesome/free-solid-svg-icons/faHeartbeat';
+import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -69,6 +70,7 @@ export const loadIcons = () => {
     faLeaf,
     faCheck,
     faHeartbeat,
+    faExclamation
  
   );
 };

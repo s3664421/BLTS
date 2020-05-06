@@ -27,7 +27,12 @@ export const Dashboard = (props: IDashboardProps) => {
 
   const { dashboardList, match, loading, loadingPlantCase, customerEntity, customer, isAdmin, isManager, isCustomer, isEmployee, account, unassignedCases, employeeCases, users, assignedCases, customerPlants } = props;
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showAssignedCases, assignedCasesOpen] = useState(false);
+  const [ showUnassignedCases, unassignedCasesOpen] = useState(false);
   const toggle = () => setDropdownOpen(prevState => !prevState);
+  const toggleAssignedCases = () => assignedCasesOpen(!showAssignedCases);
+  const toggleUnassignedCases = () => unassignedCasesOpen(!showUnassignedCases);
+
 
   useEffect(() => {
     
@@ -88,13 +93,16 @@ export const Dashboard = (props: IDashboardProps) => {
  
   return (
     <div>
-      <h2 id="dashboard-heading">
-        Dashboard 
-      </h2>
+      <Container> 
       { isManager ? (
          <div> 
-           <p> Manager Dashboard</p>
-           <Alert color="success">Welcome {account.firstName}.</Alert> 
+            
+           <Jumbotron>
+               <h1 className="display-3">Management Dashboard </h1>
+              <p className="lead">Welcome {account.firstName}</p>
+                <hr className="my-2" />
+            </Jumbotron>
+           
            <div>
 
            <Container>
@@ -104,7 +112,11 @@ export const Dashboard = (props: IDashboardProps) => {
               <Row>
                 <Col>
                    {(unassignedCases.length > 0)? ( 
-                      <Alert color="danger">Action Needed: There are {unassignedCases.length} new cases that need your attention.</Alert>
+                      <Alert onClick = {toggleAssignedCases} className="clearfix" color="danger">
+                        <FontAwesomeIcon icon = "exclamation"/> {"   "}{" "}
+                        Action Needed: There are {unassignedCases.length} new cases that need your attention.
+                      <Button className = "float-sm-right" color = "danger" onClick ={toggleAssignedCases} >View</Button>
+                      </Alert>
                     ):(
                        <Alert color="success">There are no unassigned cases.</Alert>
                      )}
@@ -115,7 +127,8 @@ export const Dashboard = (props: IDashboardProps) => {
                   <Col>
                 
 
-          
+            {showAssignedCases ? (
+              <div>
            {unassignedCases && unassignedCases.length > 0 ? (
           
            
@@ -200,6 +213,8 @@ export const Dashboard = (props: IDashboardProps) => {
           ): (
             !loadingPlantCase && <div className="alert alert-warning">No Plant Cases found</div>
           )}
+          </div>
+          ):(<div> </div>)}
           
           </Col>
                 </Row>
@@ -207,7 +222,11 @@ export const Dashboard = (props: IDashboardProps) => {
                 <Col>
                 <h2> Assigned cases</h2>
                    {(employeeCases.length > 0)? ( 
-                      <Alert color="warning">There are {employeeCases.length} assigned cases in progress.</Alert>
+                      <Alert onClick = {toggleUnassignedCases} className="clearfix" color="success">
+                       <FontAwesomeIcon icon = "check"/> {"   "}{" "} 
+                        There are {employeeCases.length} assigned cases in progress.
+                        <Button color = "success" className = "float-sm-right" onClick ={toggleUnassignedCases} >View</Button>
+                        </Alert>
                     ):(
                        <Alert color="success">All employee assigned cases are complete.</Alert>
                      )}
@@ -216,7 +235,8 @@ export const Dashboard = (props: IDashboardProps) => {
           <Row>
             <Col>
             {/* Show list of employees */}
-
+            {showUnassignedCases ? ( 
+            <div>
             {employeeCases && employeeCases.length > 0 ? (
           
            
@@ -284,6 +304,8 @@ export const Dashboard = (props: IDashboardProps) => {
          ): (
            !loadingPlantCase && <div className="alert alert-warning">No Plant Cases found</div>
          )}
+         </div>
+         ):(<div></div>)}
             
 
             
@@ -434,7 +456,7 @@ export const Dashboard = (props: IDashboardProps) => {
         }
 
 
-    
+    </Container>
     </div>
   );
 };
