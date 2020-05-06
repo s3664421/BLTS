@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
+import { Button, Col, Row, Table, Container,Jumbotron,  InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import { ICrudGetAllAction, getSortState, IPaginationBaseState, JhiPagination, JhiItemCount } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -44,17 +44,33 @@ export const Plant = (props: IPlantProps) => {
       ...paginationState,
       activePage: currentPage
     });
+    const [searchVal, setSearchVal] = useState("");
+    const updateSearchVal = (event) => setSearchVal(event.target.value);
+  
+    const searchByValue =(arrayTosearch, string) =>
+    {
+       //return array.filter(o => { return Object.keys(o).some(k => { if(typeof o[k] === 'string') return o[k].toLowerCase().includes(string.toLowerCase()); }); });
+       return arrayTosearch.filter((data) =>  JSON.stringify(data).toLowerCase().includes(string.toLowerCase())); 
+       
+    }
 
   const { plantList, match, loading, totalItems } = props;
   return (
     <div>
-      <h2 id="plant-heading">
-        Plants
-        <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
+      <Container> 
+      <Jumbotron>
+               <h2>Plants</h2>
+               <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
           <FontAwesomeIcon icon="plus" />
           &nbsp; Create new Plant
         </Link>
-      </h2>
+      </Jumbotron>
+      <InputGroup>
+        <InputGroupAddon addonType="prepend">
+          <InputGroupText>Search Plants</InputGroupText>
+        </InputGroupAddon>
+        <Input value = {searchVal} onChange = {updateSearchVal} />
+      </InputGroup>
       <div className="table-responsive">
         {plantList && plantList.length > 0 ? (
           <Table responsive>
@@ -81,23 +97,11 @@ export const Plant = (props: IPlantProps) => {
                 <th>
                   Customer <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  Average Temperature <FontAwesomeIcon icon="sort" />
-                </th>
-                <th>
-                  Average Humidity <FontAwesomeIcon icon="sort" />
-                </th>
-                <th>
-                  Average Light <FontAwesomeIcon icon="sort" />
-                </th>
-                <th>
-                  Average Moisture <FontAwesomeIcon icon="sort" />
-                </th>
                 <th />
               </tr>
             </thead>
             <tbody>
-              {plantList.map((plant, i) => (
+              {searchByValue(plantList, searchVal).map((plant, i) => (
                 <tr key={`entity-${i}`}>
                   <td>
                     <Button tag={Link} to={`${match.url}/${plant.id}`} color="link" size="sm">
@@ -108,10 +112,7 @@ export const Plant = (props: IPlantProps) => {
                   <td>{plant.description}</td>
                   <td>{plant.location}</td>
                   <td>{plant.sensorID}</td>
-                  <td>{plant.avgTemp}</td>
-                  <td>{plant.avgHumidity}</td>
-                  <td>{plant.avgLight}</td>
-                  <td>{plant.avgMoisture}</td>
+        
                   <td>
                     {plant.plantthresholds ? (
                       <Link to={`plant-thresholds/${plant.plantthresholds.id}`}>{plant.plantthresholds.id}</Link>
@@ -119,7 +120,7 @@ export const Plant = (props: IPlantProps) => {
                       ''
                     )}
                   </td>
-                  <td>{plant.customer ? <Link to={`customer/${plant.customer.id}`}>{plant.customer.id}</Link> : ''}</td>
+                  <td>{plant.customer && plant.customer.user ? <Link to={`customer/${plant.customer.id}`}>{plant.customer.user.firstName}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${plant.id}`} color="info" size="sm">
@@ -165,6 +166,7 @@ export const Plant = (props: IPlantProps) => {
           />
         </Row>
       </div>
+      </Container>
     </div>
   );
 };

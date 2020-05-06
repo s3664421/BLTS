@@ -88,7 +88,7 @@ export const PlantCaseDetail = (props: IPlantCaseDetailProps) => {
         <Button tag={Link} to={`/plant-case/${plantCaseEntity.id}/edit`} replace color="primary" className="btn btn-primary float-right jh-create-entity">
           <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
         </Button>
-         ):(<div></div>)}
+         ):('')}
           <Button tag={Link} to="/plant-case" replace color="info" className="btn btn-primary float-right jh-create-entity">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
         </Button>

@@ -3,7 +3,7 @@ import 'rc-datetime-picker/dist/picker.css';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Input} from 'reactstrap';
+import { Button, Row, Col, Input, Container, Jumbotron, Table} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -15,6 +15,7 @@ import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { LineGraph } from 'app/shared/graphing/line-graph-gradient';
 import moment from 'moment';
 import { DatetimePickerTrigger } from 'rc-datetime-picker';
+import { TextFormat } from 'react-jhipster';
 
 export interface IPlantDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 export interface IDataReadingDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
@@ -27,7 +28,7 @@ export const PlantDetail = (props: IPlantDetailProps) => {
   const lights = [];
   const moist = [];
 
-  const [fromDate, setFromDate] = useState(moment().subtract(1, 'weeks'));
+  const [fromDate, setFromDate] = useState(moment().subtract(4, 'weeks'));
   const [toDate, setToDate] = useState(moment());
 
   useEffect(() => {
@@ -75,11 +76,17 @@ export const PlantDetail = (props: IPlantDetailProps) => {
   });
 
   return (
-    <Row>
-      <Col md="3">
-        <h2>
-          Plant [<b>{plantEntity.id}</b>]
-        </h2>
+    <Container> 
+    <Jumbotron>
+      <Row>
+      <Col> <h2>Plant Details</h2>
+        <hr></hr>
+        <h4>
+          Plant ID:  [<b>{plantEntity.id}</b>]
+        </h4>
+      </Col>
+      <Col> 
+     
         <dl className="jh-entity-details">
           <dt>
             <span id="name">Name</span>
@@ -98,10 +105,40 @@ export const PlantDetail = (props: IPlantDetailProps) => {
           </dt>
           <dd>{plantEntity.sensorID}</dd>
           <dt>Plantthresholds</dt>
-          <dd>{plantEntity.plantthresholds ? plantEntity.plantthresholds.id : ''}</dd>
+          <dd>{plantEntity.plantthresholds ? (<div> 
+              <Link to = {`/plant-thresholds/${plantEntity.plantthresholds.id}`}>
+                {plantEntity.plantthresholds.id}
+                 </Link>
+
+          </div>) : ''}</dd>
           <dt>Customer</dt>
-          <dd>{plantEntity.customer ? plantEntity.customer.id : ''}</dd>
+          <dd>{plantEntity.customer ? (
+          <div>
+            <Link to={`/customer/${plantEntity.customer.id}`} >
+            
+            {plantEntity.customer.user.firstName}
+                </Link>
+            
+          </div>) : ''}</dd>
         </dl>
+        <Button tag={Link} to="/plant" replace color="info">
+          <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
+        </Button>
+        &nbsp;
+        <Button tag={Link} to={`/plant/${plantEntity.id}/edit`} replace color="primary">
+          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
+        </Button>
+      
+      </Col>
+
+      </Row>
+             
+             
+    </Jumbotron>
+    <h3>Plant Analytics</h3>
+    <hr></hr>
+    <Row>
+      <Col md="3">
         <span>Data Readings From</span>
         <DatetimePickerTrigger
           moment={fromDate}
@@ -122,13 +159,6 @@ export const PlantDetail = (props: IPlantDetailProps) => {
             <FontAwesomeIcon icon="calendar" />
           </Button>
         </DatetimePickerTrigger>
-        <Button tag={Link} to="/plant" replace color="info">
-          <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
-        </Button>
-        &nbsp;
-        <Button tag={Link} to={`/plant/${plantEntity.id}/edit`} replace color="primary">
-          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
-        </Button>
       </Col>
       <Col md="9">
       {dataReadings && dataReadings.length > 0 ? (
@@ -155,6 +185,83 @@ export const PlantDetail = (props: IPlantDetailProps) => {
       )}
       </Col>
     </Row>
+    
+    <Row>
+    <div>
+    
+    {plantEntity.plantcases && plantEntity.plantcases.length > 0 ? (
+          
+           
+          <Table responsive striped>
+          
+           <thead>
+             <tr>
+               <th className="hand" >
+                 Needs Attention 
+               </th>
+               <th className="hand" >
+                 Time Opened 
+               </th>
+               <th className="hand" >
+                 Status 
+               </th>
+               <th>
+                 Plant 
+               </th>
+               <th />
+             </tr>
+           </thead>
+           <tbody>
+           
+             { plantEntity.plantcases.map((plantCases, i) => (
+               <tr key={`entity-${i}`}>
+                 
+                 <td>{plantCases.needsAttention}</td>
+                 <td>
+                   <TextFormat type="date" value={plantCases.timeOpened} format={APP_DATE_FORMAT} />
+                 </td>
+                
+                 <td>{plantCases.status}</td>
+                 <td>{plantCases.plant ? <Link to={`plant/${plantCases.plant.id}`}>{plantCases.plant.id}</Link> : ''}</td>
+                 <td> 
+   
+                   </td>
+                 <td className="text-right">
+                   <div className="btn-group flex-btn-group-container">
+                     <Button tag={Link} to={`plant-case/${plantCases.id}`} color="info" size="sm">
+                       <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
+                     </Button>
+                     <Button
+                       tag={Link}
+                       to={`plant-case/${plantCases.id}`}
+                       color="primary"
+                       size="sm"
+                     >
+                       <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
+                     </Button>
+                     <Button
+                       tag={Link}
+                       to={`plant-case/${plantCases.id}/delete`}
+                       color="danger"
+                       size="sm"
+                     >
+                       <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Delete</span>
+                     </Button>
+                   </div>
+                 </td>
+               </tr>
+             ))}
+           </tbody>
+
+         </Table>
+         ): (
+            <div className="alert alert-warning">No Plant Cases found</div>
+         )}
+      
+         </div>
+         </Row>
+      
+    </Container> 
   );
 };
 

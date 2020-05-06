@@ -316,10 +316,15 @@ export const Dashboard = (props: IDashboardProps) => {
          </div>):(
            isEmployee ? (
             <div>
-              <div>Employee Dashboard </div>
+              <Jumbotron>
+               <h1>Employee Dashboard</h1>
+               <hr></hr>
+
+               <h4> Hello {account.firstName}, look below to see todays workload</h4>
+             </Jumbotron>
               <div>
               {(assignedCases.length > 0)? ( 
-                      <Alert color="danger">Action Needed: There are {assignedCases.length} new cases that need your attention.</Alert>
+                      <Alert color="danger"> <FontAwesomeIcon icon = "exclamation"/> {"   "}{" "} Action Needed: There are {assignedCases.length} new cases that need your attention.</Alert>
                     ):(
                        <Alert color="success">There are no unassigned cases.</Alert>
                      )}
@@ -372,17 +377,10 @@ export const Dashboard = (props: IDashboardProps) => {
                      <Button tag={Link} to={`plant-case/${plantCases.id}`} color="info" size="sm">
                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
                      </Button>
-                     <Button
-                       tag={Link}
-                       to={`plant-case/${plantCases.id}`}
-                       color="primary"
-                       size="sm"
-                     >
-                       <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
-                     </Button>
+                    
                      <Button 
                        onClick = {()=> completeCase(i)}
-                       color="secondary"
+                       color="success"
                        size="sm"
                      >
                        <FontAwesomeIcon icon="check" /> <span className="d-none d-md-inline">Complete</span>
