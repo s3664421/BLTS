@@ -30,8 +30,13 @@ import { faRoad } from '@fortawesome/free-solid-svg-icons/faRoad';
 import { faCloud } from '@fortawesome/free-solid-svg-icons/faCloud';
 import { faLeaf } from '@fortawesome/free-solid-svg-icons/faLeaf';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+<<<<<<< HEAD
 import { faHeartbeat } from '@fortawesome/free-solid-svg-icons/faHeartbeat';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
+=======
+import {faHeartbeat } from '@fortawesome/free-solid-svg-icons/faHeartbeat';
+import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation';
+>>>>>>> frontendUi
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -70,6 +75,11 @@ export const loadIcons = () => {
     faLeaf,
     faCheck,
     faHeartbeat,
+<<<<<<< HEAD
     faCalendar
+=======
+    faExclamation
+ 
+>>>>>>> frontendUi
   );
 };
