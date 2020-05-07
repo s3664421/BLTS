@@ -238,83 +238,107 @@ public class DataReadingResource {
     			//log.debug("Thresholds for this plant: {}", thresholds.toString());
     			
     			if (currPlant.getAvgTemp().compareTo(thresholds.getTempLow()) < 0) {
-    				//Generate temp low case
-    				PlantCase tlCase = new PlantCase();
-    				tlCase.needsAttention(AttentionItem.TEMP_LOW)
-    					.timeOpened(Instant.now())
-    					.status(CaseStatus.OPEN)
-    					.plant(currPlant);
-    				
-    				plantCaseRepository.save(tlCase);
+    				//Generate temp low case if an open or assigned one doesn't already exist
+    				if (!(plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.OPEN, plantID, AttentionItem.TEMP_LOW).isPresent()
+    					|| plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.ASSIGNED, plantID, AttentionItem.TEMP_LOW).isPresent())) {
+    					PlantCase tlCase = new PlantCase();
+        				tlCase.needsAttention(AttentionItem.TEMP_LOW)
+        					.timeOpened(Instant.now())
+        					.status(CaseStatus.OPEN)
+        					.plant(currPlant);
+        				
+        				plantCaseRepository.save(tlCase);
+    				}
     			} else if (currPlant.getAvgTemp().compareTo(thresholds.getTempHigh()) > 0) {
-    				//Generate temp high case
-    				PlantCase thCase = new PlantCase();
-    				thCase.needsAttention(AttentionItem.TEMP_HIGH)
-    					.timeOpened(Instant.now())
-    					.status(CaseStatus.OPEN)
-    					.plant(currPlant);
-    				
-    				plantCaseRepository.save(thCase);
+    				//Generate temp high case if an open or assigned one doesn't already exist
+    				if (!(plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.OPEN, plantID, AttentionItem.TEMP_HIGH).isPresent()
+        					|| plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.ASSIGNED, plantID, AttentionItem.TEMP_HIGH).isPresent())) {
+	    				PlantCase thCase = new PlantCase();
+	    				thCase.needsAttention(AttentionItem.TEMP_HIGH)
+	    					.timeOpened(Instant.now())
+	    					.status(CaseStatus.OPEN)
+	    					.plant(currPlant);
+	    				
+	    				plantCaseRepository.save(thCase);
+    				}
     			}
     			
     			if (currPlant.getAvgHumidity().compareTo(thresholds.getHumidityLow()) < 0) {
-    				//Generate humidity low case
-    				PlantCase hlCase = new PlantCase();
-    				hlCase.needsAttention(AttentionItem.HUMIDITY_LOW)
-    					.timeOpened(Instant.now())
-    					.status(CaseStatus.OPEN)
-    					.plant(currPlant);
-    				
-    				plantCaseRepository.save(hlCase);
+    				//Generate humidity low case if an open or assigned one doesn't already exist
+    				if (!(plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.OPEN, plantID, AttentionItem.HUMIDITY_LOW).isPresent()
+        					|| plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.ASSIGNED, plantID, AttentionItem.HUMIDITY_LOW).isPresent())) {
+	    				PlantCase hlCase = new PlantCase();
+	    				hlCase.needsAttention(AttentionItem.HUMIDITY_LOW)
+	    					.timeOpened(Instant.now())
+	    					.status(CaseStatus.OPEN)
+	    					.plant(currPlant);
+	    				
+	    				plantCaseRepository.save(hlCase);
+    				}
     			} else if (currPlant.getAvgHumidity().compareTo(thresholds.getHumidityHigh()) > 0) {
-    				//Generate humidity high case
-    				PlantCase hhCase = new PlantCase();
-    				hhCase.needsAttention(AttentionItem.HUMIDITY_HIGH)
-    					.timeOpened(Instant.now())
-    					.status(CaseStatus.OPEN)
-    					.plant(currPlant);
-    				
-    				plantCaseRepository.save(hhCase);
+    				//Generate humidity high case if an open or assigned one doesn't already exist
+    				if (!(plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.OPEN, plantID, AttentionItem.HUMIDITY_HIGH).isPresent()
+        					|| plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.ASSIGNED, plantID, AttentionItem.HUMIDITY_HIGH).isPresent())) {
+	    				PlantCase hhCase = new PlantCase();
+	    				hhCase.needsAttention(AttentionItem.HUMIDITY_HIGH)
+	    					.timeOpened(Instant.now())
+	    					.status(CaseStatus.OPEN)
+	    					.plant(currPlant);
+	    				
+	    				plantCaseRepository.save(hhCase);
+    				}
     			}
     			
     			if (currPlant.getAvgLight().compareTo(thresholds.getLightLow()) < 0) {
-    				//Generate light low case
-    				PlantCase llCase = new PlantCase();
-    				llCase.needsAttention(AttentionItem.LIGHT_LOW)
-    					.timeOpened(Instant.now())
-    					.status(CaseStatus.OPEN)
-    					.plant(currPlant);
-    				
-    				plantCaseRepository.save(llCase);
+    				//Generate light low case if an open or assigned one doesn't already exist
+    				if (!(plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.OPEN, plantID, AttentionItem.LIGHT_LOW).isPresent()
+        					|| plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.ASSIGNED, plantID, AttentionItem.LIGHT_LOW).isPresent())) {
+	    				PlantCase llCase = new PlantCase();
+	    				llCase.needsAttention(AttentionItem.LIGHT_LOW)
+	    					.timeOpened(Instant.now())
+	    					.status(CaseStatus.OPEN)
+	    					.plant(currPlant);
+	    				
+	    				plantCaseRepository.save(llCase);
+    				}
     			} else if (currPlant.getAvgLight().compareTo(thresholds.getLightHigh()) > 0) {
-    				//Generate light high case
-    				PlantCase lhCase = new PlantCase();
-    				lhCase.needsAttention(AttentionItem.LIGHT_HIGH)
-    					.timeOpened(Instant.now())
-    					.status(CaseStatus.OPEN)
-    					.plant(currPlant);
-    				
-    				plantCaseRepository.save(lhCase);
+    				//Generate light high case if an open or assigned one doesn't already exist
+    				if (!(plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.OPEN, plantID, AttentionItem.LIGHT_HIGH).isPresent()
+        					|| plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.ASSIGNED, plantID, AttentionItem.LIGHT_HIGH).isPresent())) {
+	    				PlantCase lhCase = new PlantCase();
+	    				lhCase.needsAttention(AttentionItem.LIGHT_HIGH)
+	    					.timeOpened(Instant.now())
+	    					.status(CaseStatus.OPEN)
+	    					.plant(currPlant);
+	    				
+	    				plantCaseRepository.save(lhCase);
+    				}
     			}
     			
     			if (currPlant.getAvgMoisture().compareTo(thresholds.getMoistureLow()) < 0) {
-    				//Generate moisture low case
-    				PlantCase mlCase = new PlantCase();
-    				mlCase.needsAttention(AttentionItem.MOISTURE_LOW)
-    					.timeOpened(Instant.now())
-    					.status(CaseStatus.OPEN)
-    					.plant(currPlant);
-    				
-    				plantCaseRepository.save(mlCase);
+    				//Generate moisture low case if an open or assigned one doesn't already exist
+    				if (!(plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.OPEN, plantID, AttentionItem.MOISTURE_LOW).isPresent()
+        					|| plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.ASSIGNED, plantID, AttentionItem.MOISTURE_LOW).isPresent())) {
+	    				PlantCase mlCase = new PlantCase();
+	    				mlCase.needsAttention(AttentionItem.MOISTURE_LOW)
+	    					.timeOpened(Instant.now())
+	    					.status(CaseStatus.OPEN)
+	    					.plant(currPlant);
+	    				
+	    				plantCaseRepository.save(mlCase);
+    				}
     			} else if (currPlant.getAvgMoisture().compareTo(thresholds.getMoistureHigh()) > 0) {
-    				//Generate moisture high case
-    				PlantCase mhCase = new PlantCase();
-    				mhCase.needsAttention(AttentionItem.MOISTURE_HIGH)
-    					.timeOpened(Instant.now())
-    					.status(CaseStatus.OPEN)
-    					.plant(currPlant);
-    				
-    				plantCaseRepository.save(mhCase);
+    				//Generate moisture high case if an open or assigned one doesn't already exist
+    				if (!(plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.OPEN, plantID, AttentionItem.MOISTURE_HIGH).isPresent()
+        					|| plantCaseRepository.findByStatusAndPlantAndNeedsAttention(CaseStatus.ASSIGNED, plantID, AttentionItem.MOISTURE_HIGH).isPresent())) {
+	    				PlantCase mhCase = new PlantCase();
+	    				mhCase.needsAttention(AttentionItem.MOISTURE_HIGH)
+	    					.timeOpened(Instant.now())
+	    					.status(CaseStatus.OPEN)
+	    					.plant(currPlant);
+	    				
+	    				plantCaseRepository.save(mhCase);
+    				}
     			}
     		} else { log.debug("No readings for plant with ID: {}", currPlant.getId()); }
     	}
