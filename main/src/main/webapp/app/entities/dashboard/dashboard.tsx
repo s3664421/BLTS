@@ -32,6 +32,7 @@ export const Dashboard = (props: IDashboardProps) => {
   const toggle = () => setDropdownOpen(prevState => !prevState);
   const toggleAssignedCases = () => assignedCasesOpen(!showAssignedCases);
   const toggleUnassignedCases = () => unassignedCasesOpen(!showUnassignedCases);
+  const unassignedCasesGrouped = [];
 
 
   useEffect(() => {
@@ -90,6 +91,41 @@ export const Dashboard = (props: IDashboardProps) => {
       window.location.reload();
     }
   };
+
+  unassignedCases.sort((a, b) => {
+    return a.plant.id - b.plant.id;
+  });
+  for (let j=0; j < unassignedCases.length; j++) {
+    if (j < unassignedCases.length-1) {
+      // console.log("length: ", unassignedCases.length, " , j: ", j);
+      if (unassignedCases[j].plant.id === unassignedCases[j+1].plant.id) {
+        while (j < unassignedCases.length-1 && unassignedCases[j].plant.id === unassignedCases[j+1].plant.id) {
+          // console.log("incrementing");
+          j++;
+        }
+        // console.log("grouping");
+        unassignedCasesGrouped.push({
+          caseNotes: "",
+          id: unassignedCases[j].plant.id,
+          needsAttention: "MULTIPLE",
+          plant: unassignedCases[j].plant,
+          status: "OPEN",
+          timeClosed: null,
+          timeOpened: unassignedCases[j].timeOpened,
+          user: null
+          })
+      } else {
+        // console.log("not grouping");
+        unassignedCasesGrouped.push(unassignedCases[j]);
+      }
+    } else {
+      // console.log("Last element");
+      unassignedCasesGrouped.push(unassignedCases[j]);
+    }
+  }
+
+  // console.log("unassignedCases: ", unassignedCases);
+  // console.log("unassignedCasesGrouped: ", unassignedCasesGrouped);
  
   return (
     <div>
@@ -129,7 +165,7 @@ export const Dashboard = (props: IDashboardProps) => {
 
             {showAssignedCases ? (
               <div>
-           {unassignedCases && unassignedCases.length > 0 ? (
+           {unassignedCasesGrouped && unassignedCasesGrouped.length > 0 ? (
           
            
            <Table responsive striped>
@@ -156,7 +192,7 @@ export const Dashboard = (props: IDashboardProps) => {
             </thead>
             <tbody>
             
-              { unassignedCases.map((plantCases, i) => (
+              { unassignedCasesGrouped.map((plantCases, i) => (
                 <tr key={`entity-${i}`}>
                   
                   <td>{plantCases.needsAttention}</td>
