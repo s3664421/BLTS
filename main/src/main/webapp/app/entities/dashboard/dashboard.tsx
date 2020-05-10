@@ -1,3 +1,4 @@
+/* eslint no-console: off */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -50,8 +51,7 @@ export const Dashboard = (props: IDashboardProps) => {
     
   }, []);
 
-  const handleClick = (event) => {
-   
+  const handleClick = (event) => { 
     if(event.target.value === "-1")
     {
       alert("nope");
@@ -59,23 +59,41 @@ export const Dashboard = (props: IDashboardProps) => {
     
     }
 
+    console.log("event: ", event);
    
    const entitys = {
-     ...unassignedCases[event.target.options[event.target.selectedIndex].dataset.plant]
+     ...unassignedCasesGrouped[event.target.options[event.target.selectedIndex].dataset.plant]
    };
    const userfilt = users.filter(function(user) {
     return user.authorities.includes(AUTHORITIES.EMPLOYEE);
    });
-
-   entitys.user = userfilt[event.target.value];
-   entitys.status = CaseStatus.ASSIGNED;
-   if(props.updateEntity(entitys))
-   {
-    props.getUnassignedCases(props.account);
-    props.getAllActiveCases(props.account);
-    window.location.reload();
-    
-   }
+   
+   if (entitys.needsAttention === "MULTIPLE") {
+    const multipleEntities = unassignedCases.filter((unassignedCase) => {
+      return unassignedCase.plant.id === entitys.plant.id;
+    })
+    multipleEntities.forEach((entity) => {
+      entity.user = userfilt[event.target.value];
+      entity.status = CaseStatus.ASSIGNED;
+      if(props.updateEntity(entity))
+      {
+        props.getUnassignedCases(props.account);
+        props.getAllActiveCases(props.account);
+        window.location.reload();
+        
+      }
+    })
+  } else {
+    entitys.user = userfilt[event.target.value];
+    entitys.status = CaseStatus.ASSIGNED;
+    if(props.updateEntity(entitys))
+    {
+      props.getUnassignedCases(props.account);
+      props.getAllActiveCases(props.account);
+      window.location.reload();
+      
+    }
+  }
   };
 
   const completeCase = (index) => {
