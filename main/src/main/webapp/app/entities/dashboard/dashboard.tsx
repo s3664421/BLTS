@@ -19,6 +19,7 @@ import { getUsers } from 'app/modules/administration/user-management/user-manage
 import { getEntity } from 'app/entities/customer/customer.reducer';
 import plant from '../plant/plant';
 import { EventEmitter } from 'events';
+import moment from 'moment';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 export interface IPlantCaseProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
@@ -30,10 +31,13 @@ export const Dashboard = (props: IDashboardProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showAssignedCases, assignedCasesOpen] = useState(false);
   const [ showUnassignedCases, unassignedCasesOpen] = useState(false);
+  const [showUrgentCases, urgentCasesOpen] = useState(false);
   const toggle = () => setDropdownOpen(prevState => !prevState);
   const toggleAssignedCases = () => assignedCasesOpen(!showAssignedCases);
   const toggleUnassignedCases = () => unassignedCasesOpen(!showUnassignedCases);
+  const toggleUrgentCases = () => urgentCasesOpen(!showUrgentCases);
   const unassignedCasesGrouped = [];
+  const urgentCases = [];
 
 
   useEffect(() => {
@@ -48,7 +52,6 @@ export const Dashboard = (props: IDashboardProps) => {
       //alert(props.account.id);
      props.getCustomer(props.account.id)
     }
-    
   }, []);
 
   const handleClick = (event) => { 
@@ -58,8 +61,6 @@ export const Dashboard = (props: IDashboardProps) => {
       return;
     
     }
-
-    console.log("event: ", event);
    
    const entitys = {
      ...unassignedCasesGrouped[event.target.options[event.target.selectedIndex].dataset.plant]
@@ -96,6 +97,34 @@ export const Dashboard = (props: IDashboardProps) => {
   }
   };
 
+  const handleUrgentClick = (event) => {
+    if(event.target.value === "-1")
+    {
+      alert("nope");
+      return;
+    
+    }
+   
+   const urgentEntitys = {
+     ...urgentCases[event.target.options[event.target.selectedIndex].dataset.plant]
+   };
+   const entitys = unassignedCases.find((unassignedCase) => {
+    return unassignedCase === urgentEntitys;
+  })
+   const userfilt = users.filter(function(user) {
+    return user.authorities.includes(AUTHORITIES.EMPLOYEE);
+   });
+   urgentEntitys.user = userfilt[event.target.value];
+   urgentEntitys.status = CaseStatus.ASSIGNED;
+    if(props.updateEntity(urgentEntitys))
+    {
+      props.getUnassignedCases(props.account);
+      props.getAllActiveCases(props.account);
+      window.location.reload();
+      
+    }
+  }
+
   const completeCase = (index) => {
 
     const entitys = 
@@ -113,6 +142,7 @@ export const Dashboard = (props: IDashboardProps) => {
   unassignedCases.sort((a, b) => {
     return a.plant.id - b.plant.id;
   });
+  // console.log("urgentCases: ", urgentCases);
   for (let j=0; j < unassignedCases.length; j++) {
     if (j < unassignedCases.length-1) {
       // console.log("length: ", unassignedCases.length, " , j: ", j);
@@ -141,9 +171,17 @@ export const Dashboard = (props: IDashboardProps) => {
       unassignedCasesGrouped.push(unassignedCases[j]);
     }
   }
+  unassignedCasesGrouped.forEach((unassignedCase, i, obj) => {
+    // If case was opened more than 4 days ago
+    if (moment().subtract(4, "days").isAfter(unassignedCase.timeOpened)) {
+      urgentCases.push(unassignedCase);
+    }
+  });
 
   // console.log("unassignedCases: ", unassignedCases);
   // console.log("unassignedCasesGrouped: ", unassignedCasesGrouped);
+  // console.log("urgentCases: ", urgentCases);
+  
  
   return (
     <div>
@@ -161,15 +199,124 @@ export const Dashboard = (props: IDashboardProps) => {
 
            <Container>
               <Row>
-                <h2> New cases</h2>
+                <Col>
+                <h2>Urgent Cases</h2>
+                    {(urgentCases.length > 0)? ( 
+                      <Alert onClick = {toggleUrgentCases} className="clearfix" color="danger">
+                        <FontAwesomeIcon icon = "exclamation"/> {"   "}{" "}
+                        Urgent Action Needed: There are {urgentCases.length} cases that have been open for 4 days or longer.
+                      <Button className = "float-sm-right" color = "danger" onClick ={toggleUrgentCases} >View</Button>
+                      </Alert>
+                    ):(
+                        <Alert color="success">There are no urgent cases.</Alert>
+                      )}
+                </Col>
               </Row>
+
               <Row>
                 <Col>
+                  
+
+              {showUrgentCases ? (
+                <div>
+            { urgentCases && urgentCases.length > 0 ? (
+            
+            
+            <Table responsive striped>
+            
+              <thead>
+                <tr>
+                  <th className="hand" >
+                    Needs Attention 
+                  </th>
+                  <th className="hand" >
+                    Time Opened 
+                  </th>
+                  <th className="hand" >
+                    Status 
+                  </th>
+                  <th>
+                    Plant 
+                  </th>
+                  <th>
+                    Assign To 
+                  </th>
+                  <th />
+                </tr>
+              </thead>
+              <tbody>
+              
+                { urgentCases.map((plantCases, i) => (
+                  <tr key={`entity-${i}`}>
+                    
+                    <td>{plantCases.needsAttention}</td>
+                    <td>
+                      <TextFormat type="date" value={plantCases.timeOpened} format={APP_DATE_FORMAT} />
+                    </td>
+                  
+                    <td>{plantCases.status}</td>
+                    <td>{plantCases.plant ? <Link to={`plant/${plantCases.plant.id}`}>{plantCases.plant.id}</Link> : ''}</td>
+                    <td> 
+                    <select onChange={(e) =>handleUrgentClick(e)}>
+                    <option  key = "-1" value= "-1" ></option>
+                      {users
+                      ? users.filter(function(user) {
+                        return user.authorities.includes(AUTHORITIES.EMPLOYEE);
+                      }).map((otherEntity, index) => ( 
+                        <option key = {index} value={index} data-plant = {i}  >{otherEntity.firstName}</option>
+                      
+                        ))
+                      : null}
+                      </select>
+              
+
+                      
+                      </td>
+                    <td className="text-right">
+                      <div className="btn-group flex-btn-group-container">
+                        <Button tag={Link} to={`plant-case/${plantCases.id}`} color="info" size="sm">
+                          <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
+                        </Button>
+                        <Button
+                          tag={Link}
+                          to={`plant-case/${plantCases.id}`}
+                          color="primary"
+                          size="sm"
+                        >
+                          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
+                        </Button>
+                        <Button
+                          tag={Link}
+                          to={`plant-case/${plantCases.id}/delete`}
+                          color="danger"
+                          size="sm"
+                        >
+                          <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Delete</span>
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+
+            </Table>
+            ): (
+              !loadingPlantCase && <div className="alert alert-warning">No Plant Cases found</div>
+            )}
+            </div>
+            ):(<div> </div>)}
+            
+            </Col>
+          </Row>
+
+              <Row>
+                <Col>
+                <h2> New cases</h2>
                    {(unassignedCases.length > 0)? ( 
-                      <Alert onClick = {toggleAssignedCases} className="clearfix" color="danger">
+                      <Alert onClick = {toggleAssignedCases} className="clearfix" color="warning">
                         <FontAwesomeIcon icon = "exclamation"/> {"   "}{" "}
-                        Action Needed: There are {unassignedCases.length} new cases that need your attention.
-                      <Button className = "float-sm-right" color = "danger" onClick ={toggleAssignedCases} >View</Button>
+                        Action Needed: There are {unassignedCases.length - urgentCases.length} new cases that need your attention.
+                      <Button className = "float-sm-right" color = "warning" onClick ={toggleAssignedCases} >View</Button>
                       </Alert>
                     ):(
                        <Alert color="success">There are no unassigned cases.</Alert>
@@ -211,6 +358,8 @@ export const Dashboard = (props: IDashboardProps) => {
             <tbody>
             
               { unassignedCasesGrouped.map((plantCases, i) => (
+                urgentCases.includes(plantCases) ? (null) : 
+                (
                 <tr key={`entity-${i}`}>
                   
                   <td>{plantCases.needsAttention}</td>
@@ -260,7 +409,7 @@ export const Dashboard = (props: IDashboardProps) => {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
 
           </Table>
