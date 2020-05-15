@@ -11,6 +11,8 @@ import com.smartplant.app.domain.enumeration.CaseStatus;
 import java.util.List;
 import java.util.Optional;
 
+import java.time.Instant;
+
 /**
  * Spring Data  repository for the PlantCase entity.
  */
@@ -24,6 +26,9 @@ public interface PlantCaseRepository extends JpaRepository<PlantCase, Long> {
     List<PlantCase> findByUserIsCurrentUser();
     List<PlantCase> findByUserIdAndStatus(Long id, CaseStatus status);
     
+    List<PlantCase> findByTimeOpenedBetween(Instant start, Instant end);
+    List<PlantCase> findByTimeClosedBetween(Instant start, Instant end);
+
     @Query("SELECT pc FROM PlantCase pc WHERE pc.status = ?1 AND pc.plant.id = ?2 AND pc.needsAttention = ?3")
     Optional<List<PlantCase>> findByStatusAndPlantAndNeedsAttention(CaseStatus status, Long plantID, AttentionItem needsAttention);
 

@@ -23,7 +23,11 @@ import com.smartplant.app.domain.enumeration.CaseStatus;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 /**
  * REST controller for managing {@link com.smartplant.app.domain.PlantCase}.
@@ -136,6 +140,34 @@ public class PlantCaseResource {
         log.debug("REST request to get a page of PlantCases that are assigned to employee with id:", id);
         return plantCaseRepository.findByUserIdAndStatus(id, CaseStatus.ASSIGNED);
     }
+
+       /**
+     * {@code GET  /stats} : get plantcases for this week
+     *
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of plantCases in body.
+     */
+    @GetMapping("/plant-cases/stats/getstats")
+    public ResponseEntity<Object> getPlantCaseStats() {
+        log.debug("REST request to get stats for the week");
+        Instant endOfWeek = Instant.now();
+        Instant startOfWeek = endOfWeek.minus(7, ChronoUnit.DAYS);
+        int plantCasesOpenedThisWeek = plantCaseRepository.findByTimeOpenedBetween(startOfWeek, endOfWeek).size();
+        int plantCasesClosedThisWeek = plantCaseRepository.findByTimeClosedBetween(startOfWeek, endOfWeek).size();
+        startOfWeek = endOfWeek.minus(7, ChronoUnit.DAYS);
+        endOfWeek = startOfWeek.minus(7, ChronoUnit.DAYS);
+        int plantCasesOpenedLastWeek = plantCaseRepository.findByTimeClosedBetween(startOfWeek, endOfWeek).size();
+        int plantCasesClosedLastWeek = plantCaseRepository.findByTimeClosedBetween(startOfWeek, endOfWeek).size();
+
+        HashMap<String, Integer> data = new HashMap<>();
+        data.put("openthisweek",plantCasesOpenedThisWeek);
+        data.put("closedthisweek",plantCasesClosedThisWeek );
+        data.put("openlastweek",plantCasesOpenedLastWeek );
+        data.put("closedlastweek",plantCasesClosedLastWeek );
+
+        return new ResponseEntity<Object>(data, HttpStatus.OK);
+    }
+
+
     /**
      * {@code GET  /plant-cases/:id} : get the "id" plantCase.
      *
