@@ -12,6 +12,7 @@ export const ACTION_TYPES = {
   CREATE_PLANTCASE: 'plantCase/CREATE_PLANTCASE',
   UPDATE_PLANTCASE: 'plantCase/UPDATE_PLANTCASE',
   DELETE_PLANTCASE: 'plantCase/DELETE_PLANTCASE',
+  FETCH_STATS: 'plantCase/FETCH_STATS',
   RESET: 'plantCase/RESET'
 };
 
@@ -19,6 +20,7 @@ const initialState = {
   loading: false,
   errorMessage: null,
   entities: [] as ReadonlyArray<IPlantCase>,
+  statentity: {},
   entity: defaultValue,
   updating: false,
   totalItems: 0,
@@ -32,6 +34,7 @@ export type PlantCaseState = Readonly<typeof initialState>;
 export default (state: PlantCaseState = initialState, action): PlantCaseState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_PLANTCASE_LIST):
+    case REQUEST(ACTION_TYPES.FETCH_STATS):
     case REQUEST(ACTION_TYPES.FETCH_PLANTCASE):
       return {
         ...state,
@@ -73,6 +76,14 @@ export default (state: PlantCaseState = initialState, action): PlantCaseState =>
         loading: false,
         entity: action.payload.data
       };
+
+      case SUCCESS(ACTION_TYPES.FETCH_STATS):
+    
+      return {
+        ...state,
+        loading: false,
+        statentity: action.payload.data
+      };
     case SUCCESS(ACTION_TYPES.CREATE_PLANTCASE):
     case SUCCESS(ACTION_TYPES.UPDATE_PLANTCASE):
       return {
@@ -92,6 +103,9 @@ export default (state: PlantCaseState = initialState, action): PlantCaseState =>
       return {
         ...initialState
       };
+      case FAILURE(ACTION_TYPES.FETCH_STATS):
+      
+        break;
     default:
       return state;
   }
@@ -106,6 +120,15 @@ export const getEntities: ICrudGetAllAction<IPlantCase> = (page, size, sort) => 
   return {
     type: ACTION_TYPES.FETCH_PLANTCASE_LIST,
     payload: axios.get<IPlantCase>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`)
+  };
+};
+
+export const getStats : ICrudGetAllAction<string> = () => {
+  const requestUrl = `${apiUrl}/stats/getstats`;
+
+  return {
+    type: ACTION_TYPES.FETCH_STATS,
+    payload: axios.get(requestUrl)
   };
 };
 

@@ -6,7 +6,7 @@ import { ICrudGetAllAction, TextFormat, getSortState, IPaginationBaseState, JhiP
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
-import { getEntities } from './plant-case.reducer';
+import { getEntities, getStats } from './plant-case.reducer';
 import { IPlantCase } from 'app/shared/model/plant-case.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
@@ -29,6 +29,7 @@ export const PlantCase = (props: IPlantCaseProps) => {
 
   useEffect(() => {
     sortEntities();
+    props.getStats();
   }, [paginationState.activePage, paginationState.order, paginationState.sort]);
 
   const sort = p => () => {
@@ -54,7 +55,7 @@ export const PlantCase = (props: IPlantCaseProps) => {
      return arrayTosearch.filter((data) =>  JSON.stringify(data).toLowerCase().includes(string.toLowerCase())); 
      
   }
-  const { plantCaseList, match, loading, totalItems } = props;
+  const { plantCaseList, match, loading, totalItems, stats } = props;
   return (
     <div>
       <Container> 
@@ -64,15 +65,25 @@ export const PlantCase = (props: IPlantCaseProps) => {
                   <FontAwesomeIcon icon="plus" />
                    &nbsp; Create new Plant Case
                 </Link>
-      </Jumbotron>
-
+           </Jumbotron>  
+      
+      <Row>
+      
+      <Col> <Row><p>Cases Opened This Week</p></Row><Row><h5> {stats.openthisweek} </h5> </Row></Col>
+      <Col> <Row><p>Cases Closed This Week</p></Row><Row><h5> {stats.closedthisweek} </h5> </Row></Col>
+      <Col> <Row><p>Cases Opened Last Week</p></Row><Row><h5> {stats.openlastweek} </h5> </Row></Col>
+      <Col> <Row><p>Cases Closed Last Week</p></Row><Row><h5> {stats.closedlastweek} </h5> </Row></Col>
+      </Row>
+    
+      <Row> 
+        <hr></hr>
       <InputGroup>
         <InputGroupAddon addonType="prepend">
           <InputGroupText>Search Cases</InputGroupText>
         </InputGroupAddon>
         <Input value = {searchVal} onChange = {updateSearchVal} />
       </InputGroup>
-
+      </Row>
       <div className="table-responsive">
         {plantCaseList && plantCaseList.length > 0 ? (
           <Table responsive>
@@ -177,11 +188,13 @@ export const PlantCase = (props: IPlantCaseProps) => {
 const mapStateToProps = ({ plantCase }: IRootState) => ({
   plantCaseList: plantCase.entities,
   loading: plantCase.loading,
-  totalItems: plantCase.totalItems
+  totalItems: plantCase.totalItems,
+  stats : plantCase.statentity
 });
 
 const mapDispatchToProps = {
-  getEntities
+  getEntities,
+  getStats
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
