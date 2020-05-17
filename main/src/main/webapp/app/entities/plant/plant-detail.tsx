@@ -159,6 +159,37 @@ export const PlantDetail = (props: IPlantDetailProps) => {
             <FontAwesomeIcon icon="calendar" />
           </Button>
         </DatetimePickerTrigger>
+        <hr></hr>
+        {(plantEntity.avgHumidity && plantEntity.avgTemp && 
+        plantEntity.avgMoisture && plantEntity.avgLight) ? (
+          <div>
+            <Row>
+              <Col md="12">
+                <h4>Latest Average Data Readings:</h4>
+              </Col>
+            </Row>
+            <Row>
+              <Col md="12">
+                <p>{Math.trunc(plantEntity.avgHumidity * 100)}% Humidity</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col md="12">
+                <p>{plantEntity.avgLight} Lux</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col md="12">
+                <p>{Math.trunc(plantEntity.avgMoisture * 100)}% Moisture Content</p>
+              </Col>
+            </Row>
+            <Row>
+              <Col md="12">
+                <p>{plantEntity.avgTemp} Degrees Celcius</p>
+              </Col>
+            </Row>
+          </div>
+        ) : ('')}
       </Col>
       <Col md="9">
       {dataReadings && dataReadings.length > 0 ? (
