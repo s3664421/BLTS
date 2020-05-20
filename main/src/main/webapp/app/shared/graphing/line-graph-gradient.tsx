@@ -1,5 +1,4 @@
 /* eslint no-shadow: off */
-/* eslint no-console: off */
 import React, { Component } from 'react'
 import { select } from 'd3-selection'
 import { scaleLinear, scaleUtc, scaleSequential } from 'd3-scale'
@@ -30,9 +29,6 @@ export class LineGraph extends Component {
         const canvas = select(node).append("svg")
             .attr("width", this.props.size[0] + this.props.margin[0] + this.props.margin[2])
             .attr("height", this.props.size[1] + this.props.margin[1] + this.props.margin[3])
-            
-        //width={this.props.size[0] + this.props.margin[0] + this.props.margin[2]} 
-        //height={this.props.size[1] + this.props.margin[1] + this.props.margin[3]}
 
         const x = scaleUtc()
             .domain(extent(props.data, d => Date.parse(d.time)))
@@ -64,14 +60,14 @@ export class LineGraph extends Component {
         canvas.append("g").call(xAxis);
         canvas.append("g").call(yAxis);
 
-        //X-Axis label
+        // X-Axis label
         canvas.append("text")             
             .attr("transform",
                   `translate(${props.size[0]/2} , ${props.size[1] + props.margin[1] + 20})`)
             .style("text-anchor", "middle")
             .text(props.labels[1]);
       
-        //Y-Axis label
+        // Y-Axis label
         canvas.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 0)

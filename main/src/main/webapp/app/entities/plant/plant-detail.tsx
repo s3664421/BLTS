@@ -1,17 +1,12 @@
-/* eslint no-console: off */
 import 'rc-datetime-picker/dist/picker.css';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Input, Container, Jumbotron, Table} from 'reactstrap';
+import { Button, Row, Col, Container, Jumbotron, Table} from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import { IRootState } from 'app/shared/reducers';
 import { getEntity, getAllDataReading } from './plant.reducer';
-
-import { IPlant } from 'app/shared/model/plant.model';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-
+import { APP_DATE_FORMAT } from 'app/config/constants';
 import { LineGraph } from 'app/shared/graphing/line-graph-gradient';
 import moment from 'moment';
 import { DatetimePickerTrigger } from 'rc-datetime-picker';
@@ -46,16 +41,14 @@ export const PlantDetail = (props: IPlantDetailProps) => {
 
   const onChangeFromDate = (date) => {
     setFromDate(date);
-    // console.log("fromDate: ", fromDate.format());
   }
 
   const onChangeToDate = (date) => {
     setToDate(date);
-    // console.log("toDate: ", toDate.format());
   }
 
-  //Map data reading values into individual arrays
-  //of timestamps and values
+  // Map data reading values into individual arrays
+  // of timestamps and values
   dataReadings.map((dataReading, i) => {
     temps.push(
       {"time": dataReading.time, 

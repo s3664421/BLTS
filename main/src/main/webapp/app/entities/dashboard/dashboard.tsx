@@ -1,24 +1,17 @@
-/* eslint no-console: off */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table, Alert, Container,Jumbotron, Label, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { ICrudGetAllAction, TextFormat, getSortState, IPaginationBaseState, JhiPagination, JhiItemCount } from 'react-jhipster';
+import { Button, Col, Row, Table, Alert, Container,Jumbotron } from 'reactstrap';
+import { TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { updateEntity } from '../plant-case/plant-case.reducer';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
 import { CaseStatus } from 'app/shared/model/enumerations/case-status.model';
 import { IRootState } from 'app/shared/reducers';
 import { getUnassignedCases, getCaseForEmployee, getAllActiveCases, getAllPlants, getCustomer} from './dashboard.reducer';
-import { IDashboard } from 'app/shared/model/dashboard.model';
-import { ICustomer } from 'app/shared/model/customer.model'
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT, AUTHORITIES } from 'app/config/constants';
 import { hasAnyAuthority } from 'app/shared/auth/private-route';
-import { IUser } from 'app/shared/model/user.model';
 import { getUsers } from 'app/modules/administration/user-management/user-management.reducer';
 import { getEntity } from 'app/entities/customer/customer.reducer';
-import plant from '../plant/plant';
-import { EventEmitter } from 'events';
 import moment from 'moment';
 
 export interface IDashboardProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
@@ -48,10 +41,7 @@ export const Dashboard = (props: IDashboardProps) => {
     props.getCaseForEmployee(props.account.id);
     
     if(isCustomer )
-    {
-      //alert(props.account.id);
-     props.getCustomer(props.account.id)
-    }
+    {props.getCustomer(props.account.id)}
   }, []);
 
   const handleClick = (event) => { 
@@ -92,7 +82,6 @@ export const Dashboard = (props: IDashboardProps) => {
       props.getUnassignedCases(props.account);
       props.getAllActiveCases(props.account);
       window.location.reload();
-      
     }
   }
   };
@@ -102,7 +91,6 @@ export const Dashboard = (props: IDashboardProps) => {
     {
       alert("nope");
       return;
-    
     }
    
    const urgentEntitys = {
@@ -142,16 +130,12 @@ export const Dashboard = (props: IDashboardProps) => {
   unassignedCases.sort((a, b) => {
     return a.plant.id - b.plant.id;
   });
-  // console.log("urgentCases: ", urgentCases);
   for (let j=0; j < unassignedCases.length; j++) {
     if (j < unassignedCases.length-1) {
-      // console.log("length: ", unassignedCases.length, " , j: ", j);
       if (unassignedCases[j].plant.id === unassignedCases[j+1].plant.id) {
         while (j < unassignedCases.length-1 && unassignedCases[j].plant.id === unassignedCases[j+1].plant.id) {
-          // console.log("incrementing");
           j++;
         }
-        // console.log("grouping");
         unassignedCasesGrouped.push({
           caseNotes: "",
           id: unassignedCases[j].plant.id,
@@ -163,11 +147,9 @@ export const Dashboard = (props: IDashboardProps) => {
           user: null
           })
       } else {
-        // console.log("not grouping");
         unassignedCasesGrouped.push(unassignedCases[j]);
       }
     } else {
-      // console.log("Last element");
       unassignedCasesGrouped.push(unassignedCases[j]);
     }
   }
@@ -177,26 +159,18 @@ export const Dashboard = (props: IDashboardProps) => {
       urgentCases.push(unassignedCase);
     }
   });
-
-  // console.log("unassignedCases: ", unassignedCases);
-  // console.log("unassignedCasesGrouped: ", unassignedCasesGrouped);
-  // console.log("urgentCases: ", urgentCases);
   
- 
   return (
     <div>
       <Container> 
       { isManager ? (
          <div> 
-            
            <Jumbotron>
                <h1 className="display-3">Management Dashboard </h1>
               <p className="lead">Welcome {account.firstName}</p>
                 <hr className="my-2" />
             </Jumbotron>
-           
            <div>
-
            <Container>
               <Row>
                 <Col>
@@ -207,23 +181,15 @@ export const Dashboard = (props: IDashboardProps) => {
                         Urgent Action Needed: There are {urgentCases.length} cases that have been open for 4 days or longer.
                       <Button className = "float-sm-right" color = "danger" onClick ={toggleUrgentCases} >View</Button>
                       </Alert>
-                    ):(
-                        <Alert color="success">There are no urgent cases.</Alert>
-                      )}
+                    ):(<Alert color="success">There are no urgent cases.</Alert>)}
                 </Col>
               </Row>
-
               <Row>
                 <Col>
-                  
-
               {showUrgentCases ? (
                 <div>
             { urgentCases && urgentCases.length > 0 ? (
-            
-            
             <Table responsive striped>
-            
               <thead>
                 <tr>
                   <th className="hand" >
@@ -245,15 +211,12 @@ export const Dashboard = (props: IDashboardProps) => {
                 </tr>
               </thead>
               <tbody>
-              
                 { urgentCases.map((plantCases, i) => (
                   <tr key={`entity-${i}`}>
-                    
                     <td>{plantCases.needsAttention}</td>
                     <td>
                       <TextFormat type="date" value={plantCases.timeOpened} format={APP_DATE_FORMAT} />
                     </td>
-                  
                     <td>{plantCases.status}</td>
                     <td>{plantCases.plant ? <Link to={`plant/${plantCases.plant.id}`}>{plantCases.plant.id}</Link> : ''}</td>
                     <td> 
@@ -264,13 +227,9 @@ export const Dashboard = (props: IDashboardProps) => {
                         return user.authorities.includes(AUTHORITIES.EMPLOYEE);
                       }).map((otherEntity, index) => ( 
                         <option key = {index} value={index} data-plant = {i}  >{otherEntity.firstName}</option>
-                      
                         ))
                       : null}
                       </select>
-              
-
-                      
                       </td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">
@@ -281,16 +240,14 @@ export const Dashboard = (props: IDashboardProps) => {
                           tag={Link}
                           to={`plant-case/${plantCases.id}`}
                           color="primary"
-                          size="sm"
-                        >
+                          size="sm">
                           <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
                         </Button>
                         <Button
                           tag={Link}
                           to={`plant-case/${plantCases.id}/delete`}
                           color="danger"
-                          size="sm"
-                        >
+                          size="sm">
                           <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Delete</span>
                         </Button>
                       </div>
@@ -298,17 +255,14 @@ export const Dashboard = (props: IDashboardProps) => {
                   </tr>
                 ))}
               </tbody>
-
             </Table>
             ): (
               !loadingPlantCase && <div className="alert alert-warning">No Plant Cases found</div>
             )}
             </div>
             ):(<div> </div>)}
-            
             </Col>
           </Row>
-
               <Row>
                 <Col>
                 <h2> New cases</h2>
@@ -323,18 +277,12 @@ export const Dashboard = (props: IDashboardProps) => {
                      )}
                 </Col>
                 </Row>
-               
                 <Row>
                   <Col>
-                
-
             {showAssignedCases ? (
               <div>
            {unassignedCasesGrouped && unassignedCasesGrouped.length > 0 ? (
-          
-           
            <Table responsive striped>
-           
             <thead>
               <tr>
                 <th className="hand" >
@@ -356,17 +304,14 @@ export const Dashboard = (props: IDashboardProps) => {
               </tr>
             </thead>
             <tbody>
-            
               { unassignedCasesGrouped.map((plantCases, i) => (
                 urgentCases.includes(plantCases) ? (null) : 
                 (
                 <tr key={`entity-${i}`}>
-                  
                   <td>{plantCases.needsAttention}</td>
                   <td>
                     <TextFormat type="date" value={plantCases.timeOpened} format={APP_DATE_FORMAT} />
                   </td>
-                 
                   <td>{plantCases.status}</td>
                   <td>{plantCases.plant ? <Link to={`plant/${plantCases.plant.id}`}>{plantCases.plant.id}</Link> : ''}</td>
                   <td> 
@@ -377,13 +322,9 @@ export const Dashboard = (props: IDashboardProps) => {
                       return user.authorities.includes(AUTHORITIES.EMPLOYEE);
                     }).map((otherEntity, index) => ( 
                       <option key = {index} value={index} data-plant = {i}  >{otherEntity.firstName}</option>
-                     
                       ))
                     : null}
                     </select>
-            
-
-                    
                     </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
@@ -394,16 +335,14 @@ export const Dashboard = (props: IDashboardProps) => {
                         tag={Link}
                         to={`plant-case/${plantCases.id}`}
                         color="primary"
-                        size="sm"
-                      >
+                        size="sm">
                         <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
                       </Button>
                       <Button
                         tag={Link}
                         to={`plant-case/${plantCases.id}/delete`}
                         color="danger"
-                        size="sm"
-                      >
+                        size="sm">
                         <FontAwesomeIcon icon="trash" /> <span className="d-none d-md-inline">Delete</span>
                       </Button>
                     </div>
@@ -411,14 +350,12 @@ export const Dashboard = (props: IDashboardProps) => {
                 </tr>
               )))}
             </tbody>
-
           </Table>
           ): (
             !loadingPlantCase && <div className="alert alert-warning">No Plant Cases found</div>
           )}
           </div>
           ):(<div> </div>)}
-          
           </Col>
                 </Row>
             <Row> 
@@ -441,10 +378,7 @@ export const Dashboard = (props: IDashboardProps) => {
             {showUnassignedCases ? ( 
             <div>
             {employeeCases && employeeCases.length > 0 ? (
-          
-           
           <Table responsive striped>
-          
            <thead>
              <tr>
                <th className="hand" >
@@ -463,15 +397,12 @@ export const Dashboard = (props: IDashboardProps) => {
              </tr>
            </thead>
            <tbody>
-          
              { employeeCases.map((plantCases, i) => (
                <tr key={`entity-${i}`}>
-                 
                  <td>{plantCases.needsAttention}</td>
                  <td>
                    <TextFormat type="date" value={plantCases.timeOpened} format={APP_DATE_FORMAT} />
                  </td>
-                
                  <td>{plantCases.status}</td>
                  {(plantCases.user)? ( 
                  <td>{plantCases.user.firstName ? <Link to={`/`}>{plantCases.user.firstName}</Link> : ''}</td>
@@ -502,16 +433,12 @@ export const Dashboard = (props: IDashboardProps) => {
                </tr>
              ))}
            </tbody>
-
          </Table>
          ): (
            !loadingPlantCase && <div className="alert alert-warning">No Plant Cases found</div>
          )}
          </div>
          ):(<div></div>)}
-            
-
-            
             </Col>
           </Row>
             </Container>
@@ -522,7 +449,6 @@ export const Dashboard = (props: IDashboardProps) => {
               <Jumbotron>
                <h1>Employee Dashboard</h1>
                <hr></hr>
-
                <h4> Hello {account.firstName}, look below to see todays workload</h4>
              </Jumbotron>
               <div>
@@ -532,13 +458,8 @@ export const Dashboard = (props: IDashboardProps) => {
                        <Alert color="success">There are no unassigned cases.</Alert>
                      )}
               </div>
-
-              
            {assignedCases && assignedCases.length > 0 ? (
-          
-           
           <Table responsive striped>
-          
            <thead>
              <tr>
                <th className="hand" >
@@ -553,7 +474,6 @@ export const Dashboard = (props: IDashboardProps) => {
                <th>
                  Plant 
                </th>
-             
               <th>
                 Location
               </th>
@@ -561,15 +481,12 @@ export const Dashboard = (props: IDashboardProps) => {
              </tr>
            </thead>
            <tbody>
-           
              { assignedCases.map((plantCases, i) => (
                <tr key={`entity-${i}`}>
-                 
                  <td>{plantCases.needsAttention}</td>
                  <td>
                    <TextFormat type="date" value={plantCases.timeOpened} format={APP_DATE_FORMAT} />
                  </td>
-                
                  <td>{plantCases.status}</td>
                  <td>{plantCases.plant ? <Link to={`plant/${plantCases.plant.id}`}>{plantCases.plant.id}</Link> : ''}</td>
                 {plantCases.plant ? ( 
@@ -580,12 +497,10 @@ export const Dashboard = (props: IDashboardProps) => {
                      <Button tag={Link} to={`plant-case/${plantCases.id}`} color="info" size="sm">
                        <FontAwesomeIcon icon="eye" /> <span className="d-none d-md-inline">View</span>
                      </Button>
-                    
                      <Button 
                        onClick = {()=> completeCase(i)}
                        color="success"
-                       size="sm"
-                     >
+                       size="sm">
                        <FontAwesomeIcon icon="check" /> <span className="d-none d-md-inline">Complete</span>
                      </Button>
                    </div>
@@ -593,24 +508,15 @@ export const Dashboard = (props: IDashboardProps) => {
                </tr>
              ))}
            </tbody>
-
          </Table>
          ): (
            !loadingPlantCase && <div className="alert alert-warning">No Plant Cases found</div>
          )}
-
-
             </div>
-            
            ):( isAdmin ? (
-            <div>Admin Dashboard
-
-
-            </div>
-
+            <div>Admin Dashboard</div>
            ):
            ( isCustomer ?( 
-
            (customer ? (
             <div>
            <Jumbotron>
@@ -651,12 +557,7 @@ export const Dashboard = (props: IDashboardProps) => {
             ):(<div>No refrence to customer found</div>))
            ):(
            <div>Welcome User</div>))))
-           
-    
-         
         }
-
-
     </Container>
     </div>
   );
