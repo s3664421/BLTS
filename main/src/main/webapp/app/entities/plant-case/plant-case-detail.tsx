@@ -35,8 +35,7 @@ export const PlantCaseDetail = (props: IPlantCaseDetailProps) => {
     };
     const now = new Date();
     newEntity.caseNotes = plantCaseEntity.caseNotes + "\n" + now.toDateString() + " " + now.toLocaleTimeString() + "-" +account.firstName + " " + account.lastName + " : "+ caseNotes;
-    
-    alert(newEntity.caseNotes);
+  
     if(props.updateEntity(newEntity))
     {
       window.location.reload();
