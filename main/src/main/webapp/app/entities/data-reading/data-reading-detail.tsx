@@ -50,7 +50,7 @@ export const DataReadingDetail = (props: IDataReadingDetailProps) => {
           <dt>Plant</dt>
           <dd>{dataReadingEntity.plant ? dataReadingEntity.plant.sensorID : ''}</dd>
         </dl>
-        <Button tag={Link} to="/data-reading" replace color="info">
+        <Button onClick={props.history.goBack} replace color="info">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
         </Button>
         &nbsp;

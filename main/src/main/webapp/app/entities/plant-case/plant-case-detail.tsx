@@ -89,7 +89,7 @@ export const PlantCaseDetail = (props: IPlantCaseDetailProps) => {
           <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
         </Button>
          ):('')}
-          <Button tag={Link} to="/plant-case" replace color="info" className="btn btn-primary float-right jh-create-entity">
+          <Button onClick={props.history.goBack} replace color="info" className="btn btn-primary float-right jh-create-entity">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
         </Button>
       </Jumbotron>

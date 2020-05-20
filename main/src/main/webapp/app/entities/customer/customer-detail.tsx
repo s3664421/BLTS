@@ -53,7 +53,7 @@ export const CustomerDetail = (props: ICustomerDetailProps) => {
                 <span id="phoneNo">Phone No: <span className="customerResult">{customerEntity.phoneNo}</span></span>
               </dt>
             </dl>
-            <Button tag={Link} to="/customer" replace color="info">
+            <Button onClick={props.history.goBack} replace color="info">
               <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
             </Button>
             &nbsp;

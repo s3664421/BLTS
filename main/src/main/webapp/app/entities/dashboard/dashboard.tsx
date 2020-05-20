@@ -32,7 +32,6 @@ export const Dashboard = (props: IDashboardProps) => {
   const unassignedCasesGrouped = [];
   const urgentCases = [];
 
-
   useEffect(() => {
     
     props.getUnassignedCases(props.account);
@@ -405,7 +404,7 @@ export const Dashboard = (props: IDashboardProps) => {
                  </td>
                  <td>{plantCases.status}</td>
                  {(plantCases.user)? ( 
-                 <td>{plantCases.user.firstName ? <Link to={`/`}>{plantCases.user.firstName}</Link> : ''}</td>
+                 <td>{plantCases.user.firstName ? <span>{plantCases.user.firstName}</span> : ''}</td>
                  ):( <div> No Employee Assigned</div>)}
                  <td className="text-right">
                    <div className="btn-group flex-btn-group-container">

@@ -58,7 +58,7 @@ export const PlantThresholdsDetail = (props: IPlantThresholdsDetailProps) => {
           </dt>
           <dd>{plantThresholdsEntity.moistureHigh}</dd>
         </dl>
-        <Button tag={Link} to="/plant-thresholds" replace color="info">
+        <Button onClick={props.history.goBack} replace color="info">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
         </Button>
         &nbsp;

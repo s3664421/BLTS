@@ -114,7 +114,7 @@ export const PlantDetail = (props: IPlantDetailProps) => {
             
           </div>) : ''}</dd>
         </dl>
-        <Button tag={Link} to="/plant" replace color="info">
+        <Button onClick={props.history.goBack} replace color="info">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
         </Button>
         &nbsp;
