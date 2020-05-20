@@ -522,7 +522,7 @@ export const Dashboard = (props: IDashboardProps) => {
                <h1 className="display-3">Hello {props.account.firstName}</h1>
               <p className="lead">Coming to take a quick look at your plants?</p>
                 <hr className="my-2" />
-              <p className="lead"> Look below to see all your plants, we will let you know if someones booked to check them out</p>
+              <p className="lead"> Look below to see all your plants, we will let you know if someone is booked to check them out</p>
             </Jumbotron>
           <div className="customer-loinnerbox">
             {customer.plants && customer.plants.length > 0 ? (
@@ -543,7 +543,7 @@ export const Dashboard = (props: IDashboardProps) => {
                         </Button>
                       </td>
                       <td>{plantReading.location}</td>
-                      <td>{plantReading.plantcases ? (<b><FontAwesomeIcon icon = "heartbeat"/> Someones on their way to check this one out!</b>): (<FontAwesomeIcon icon = "heart"/>)} </td>
+                      <td>{plantReading.plantcases ? (<b><FontAwesomeIcon icon = "heartbeat"/> Someone is on their way to check this one out!</b>): (<FontAwesomeIcon icon = "heart"/>)} </td>
                     </tr>
                   ))}
                 </tbody>
