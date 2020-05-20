@@ -16,6 +16,7 @@ import reducer, {
 } from 'app/entities/customer/customer.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { ICustomer, defaultValue } from 'app/shared/model/customer.model';
+import { IPlant } from 'app/shared/model/plant.model';
 
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {
@@ -31,6 +32,7 @@ describe('Entities reducer tests', () => {
     errorMessage: null,
     entities: [] as ReadonlyArray<ICustomer>,
     entity: defaultValue,
+    plant: [] as ReadonlyArray<IPlant>,
     updating: false,
     updateSuccess: false
   };

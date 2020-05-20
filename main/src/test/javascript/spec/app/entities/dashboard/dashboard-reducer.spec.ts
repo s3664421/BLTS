@@ -16,6 +16,9 @@ import reducer, {
 } from 'app/entities/dashboard/dashboard.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IDashboard, defaultValue } from 'app/shared/model/dashboard.model';
+import { IPlantCase } from 'app/shared/model/plant-case.model';
+import { IUser } from 'app/shared/model/user.model';
+import { IPlant } from 'app/shared/model/plant.model';
 
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {
@@ -30,6 +33,13 @@ describe('Entities reducer tests', () => {
     loading: false,
     errorMessage: null,
     entities: [] as ReadonlyArray<IDashboard>,
+    unassignedCases: [] as Array<IPlantCase>,
+    assignedCases: [] as ReadonlyArray<IPlantCase>,
+    employeeCases: [] as ReadonlyArray<IPlantCase>,
+    getEmployees: [] as ReadonlyArray<IUser>,
+    users: [] as ReadonlyArray<IUser>,
+    customerPlants: [] as ReadonlyArray<IPlant>,
+    customer: null,
     entity: defaultValue,
     updating: false,
     updateSuccess: false
