@@ -32,7 +32,8 @@ import { faLeaf } from '@fortawesome/free-solid-svg-icons/faLeaf';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faHeartbeat } from '@fortawesome/free-solid-svg-icons/faHeartbeat';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
-import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation';
+import { faExclamation } from '@fortawesome/free-solid-svg-icons/faExclamation';
+import { faChartLine } from '@fortawesome/free-solid-svg-icons/faChartLine';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -72,7 +73,7 @@ export const loadIcons = () => {
     faCheck,
     faHeartbeat,
     faCalendar,
-    faExclamation
- 
+    faExclamation,
+    faChartLine
   );
 };

@@ -74,29 +74,14 @@ export const PlantCaseDetail = (props: IPlantCaseDetailProps) => {
     
     <Container> 
       <Jumbotron>
-               <h2>Plantcase Details  </h2>
-               <hr></hr>
-
-              
+      <Row>
+        <Col>
+          <h2>Plantcase Details  </h2>
+          <hr></hr>
         &nbsp;
-        <Button  color="success" onClick = {toggle} className="btn btn-primary float-right jh-create-entity">
-          <FontAwesomeIcon icon="pencil-alt"  /> <span className="d-none d-md-inline">Add Notes</span>
-        </Button>
-        &nbsp;
-        {!isEmployee ? (
-        <Button tag={Link} to={`/plant-case/${plantCaseEntity.id}/edit`} replace color="primary" className="btn btn-primary float-right jh-create-entity">
-          <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
-        </Button>
-         ):('')}
-          <Button onClick={props.history.goBack} replace color="info" className="btn btn-primary float-right jh-create-entity">
-          <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
-        </Button>
-      </Jumbotron>
-    <Row>
-      <Col >
-        <h2>
+        <h4>
           PlantCase ID [<b>{plantCaseEntity.id}</b>]
-        </h2>
+        </h4>
         <dl >
           <dt>
             <span id="postcode">Needs Attention</span>
@@ -135,9 +120,9 @@ export const PlantCaseDetail = (props: IPlantCaseDetailProps) => {
           {plantCaseEntity.plant ? (plantCaseEntity.plant.customer ? (
          
           <div>
-             <h2>
+             <h4>
               Plant Location
-            </h2>
+            </h4>
             <dl className="jh-entity-details">
               <dt>
                 <span id="postcode">Address: <span className="customerResult">{plantCaseEntity.plant.customer.address}</span></span>
@@ -161,8 +146,24 @@ export const PlantCaseDetail = (props: IPlantCaseDetailProps) => {
 
         ):(<div> No Customer Refrence Found </div>)) : (<div> No Plant Refrence Found </div>)}
         </div>
+        <div>
+          <Button onClick={props.history.goBack} replace color="info" className="btn btn-primary jh-create-entity">
+            <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>
+          </Button>
+          &nbsp;
+          {!isEmployee ? (
+          <Button tag={Link} to={`/plant-case/${plantCaseEntity.id}/edit`} replace color="primary" className="btn btn-primary jh-create-entity">
+            <FontAwesomeIcon icon="pencil-alt" /> <span className="d-none d-md-inline">Edit</span>
+          </Button>
+          ):('')}
+          &nbsp;
+          <Button  color="success" onClick = {toggle} className="btn btn-primary jh-create-entity">
+            <FontAwesomeIcon icon="pencil-alt"  /> <span className="d-none d-md-inline">Add Notes</span>
+          </Button>
+        </div>
       </Col>
     </Row>
+    </Jumbotron>
     </Container>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
+import { Button, Col, Row, Table, Container,Jumbotron,  InputGroup, InputGroupAddon, InputGroupText, Input } from 'reactstrap';
 import { ICrudGetAllAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -17,16 +17,33 @@ export const PlantThresholds = (props: IPlantThresholdsProps) => {
     props.getEntities();
   }, []);
 
+  const [searchVal, setSearchVal] = useState("");
+  const updateSearchVal = (event) => setSearchVal(event.target.value);
+
+  const searchByValue =(arrayTosearch, string) =>
+  {
+     // return array.filter(o => { return Object.keys(o).some(k => { if(typeof o[k] === 'string') return o[k].toLowerCase().includes(string.toLowerCase()); }); });
+     return arrayTosearch.filter((data) =>  JSON.stringify(data).toLowerCase().includes(string.toLowerCase())); 
+     
+  }
+
   const { plantThresholdsList, match, loading } = props;
   return (
     <div>
-      <h2 id="plant-thresholds-heading">
-        Plant Thresholds
+      <Container>
+      <Jumbotron>
+        <h2>Plant Thresholds</h2>
         <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
           <FontAwesomeIcon icon="plus" />
           &nbsp; Create new Plant Thresholds
         </Link>
-      </h2>
+      </Jumbotron>
+      <InputGroup>
+        <InputGroupAddon addonType="prepend">
+          <InputGroupText>Search Plant Thresholds</InputGroupText>
+        </InputGroupAddon>
+        <Input value = {searchVal} onChange = {updateSearchVal} />
+      </InputGroup>
       <div className="table-responsive">
         {plantThresholdsList && plantThresholdsList.length > 0 ? (
           <Table responsive>
@@ -45,7 +62,7 @@ export const PlantThresholds = (props: IPlantThresholdsProps) => {
               </tr>
             </thead>
             <tbody>
-              {plantThresholdsList.map((plantThresholds, i) => (
+              {searchByValue(plantThresholdsList, searchVal).map((plantThresholds, i) => (
                 <tr key={`entity-${i}`}>
                   <td>
                     <Button tag={Link} to={`${match.url}/${plantThresholds.id}`} color="link" size="sm">
@@ -81,6 +98,7 @@ export const PlantThresholds = (props: IPlantThresholdsProps) => {
           !loading && <div className="alert alert-warning">No Plant Thresholds found</div>
         )}
       </div>
+      </Container>
     </div>
   );
 };

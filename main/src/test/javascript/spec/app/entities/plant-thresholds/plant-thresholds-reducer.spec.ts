@@ -16,6 +16,7 @@ import reducer, {
 } from 'app/entities/plant-thresholds/plant-thresholds.reducer';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 import { IPlantThresholds, defaultValue } from 'app/shared/model/plant-thresholds.model';
+import { defaultValue as defaultPlantValue } from 'app/shared/model/plant.model';
 
 describe('Entities reducer tests', () => {
   function isEmpty(element): boolean {
@@ -31,6 +32,7 @@ describe('Entities reducer tests', () => {
     errorMessage: null,
     entities: [] as ReadonlyArray<IPlantThresholds>,
     entity: defaultValue,
+    plant: defaultPlantValue,
     updating: false,
     updateSuccess: false
   };

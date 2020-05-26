@@ -18,4 +18,6 @@ public interface PlantRepository extends JpaRepository<Plant, Long> {
 	Optional<Plant> findBySensorID(String sensorID);
 	@Query(value="SELECT * FROM plant p WHERE p.customer_id = ?1", nativeQuery=true)
 	Optional<List<Plant>> findByCustomerID(Long customerID);
+	@Query(value="SELECT * FROM plant p WHERE p.plantthresholds_id = ?1", nativeQuery=true)
+	Optional<Plant> findByThresholdID(Long thresholdID);
 }

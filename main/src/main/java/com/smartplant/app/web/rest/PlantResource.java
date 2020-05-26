@@ -150,4 +150,11 @@ public class PlantResource {
         Optional<List<Plant>> plant = plantRepository.findByCustomerID(customerID);
         return ResponseUtil.wrapOrNotFound(plant);
     }
+    
+    @GetMapping("plants/thresholds/{thresholdID}")
+    public ResponseEntity<Plant> getPlantByThresholdID(@PathVariable Long thresholdID) {
+        log.debug("REST request to get all plants for thresholdID : {}", thresholdID);
+        Optional<Plant> plant = plantRepository.findByThresholdID(thresholdID);
+        return ResponseUtil.wrapOrNotFound(plant);
+    }
 }

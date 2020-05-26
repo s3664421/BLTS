@@ -5,6 +5,7 @@ import { cleanEntity } from 'app/shared/util/entity-utils';
 import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
 
 import { IPlantThresholds, defaultValue } from 'app/shared/model/plant-thresholds.model';
+import { IPlant, defaultValue as defaultPlantValue } from 'app/shared/model/plant.model';
 
 export const ACTION_TYPES = {
   FETCH_PLANTTHRESHOLDS_LIST: 'plantThresholds/FETCH_PLANTTHRESHOLDS_LIST',
@@ -12,7 +13,8 @@ export const ACTION_TYPES = {
   CREATE_PLANTTHRESHOLDS: 'plantThresholds/CREATE_PLANTTHRESHOLDS',
   UPDATE_PLANTTHRESHOLDS: 'plantThresholds/UPDATE_PLANTTHRESHOLDS',
   DELETE_PLANTTHRESHOLDS: 'plantThresholds/DELETE_PLANTTHRESHOLDS',
-  RESET: 'plantThresholds/RESET'
+  RESET: 'plantThresholds/RESET',
+  FETCH_PLANT_BY_THRESHOLDS: 'plantThresholds/FETCH_PLANT_BY_THRESHOLDS'
 };
 
 const initialState = {
@@ -20,6 +22,7 @@ const initialState = {
   errorMessage: null,
   entities: [] as ReadonlyArray<IPlantThresholds>,
   entity: defaultValue,
+  plant: defaultPlantValue,
   updating: false,
   updateSuccess: false
 };
@@ -32,6 +35,7 @@ export default (state: PlantThresholdsState = initialState, action): PlantThresh
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_PLANTTHRESHOLDS_LIST):
     case REQUEST(ACTION_TYPES.FETCH_PLANTTHRESHOLDS):
+    case REQUEST(ACTION_TYPES.FETCH_PLANT_BY_THRESHOLDS):
       return {
         ...state,
         errorMessage: null,
@@ -52,6 +56,7 @@ export default (state: PlantThresholdsState = initialState, action): PlantThresh
     case FAILURE(ACTION_TYPES.CREATE_PLANTTHRESHOLDS):
     case FAILURE(ACTION_TYPES.UPDATE_PLANTTHRESHOLDS):
     case FAILURE(ACTION_TYPES.DELETE_PLANTTHRESHOLDS):
+    case FAILURE(ACTION_TYPES.FETCH_PLANT_BY_THRESHOLDS):
       return {
         ...state,
         loading: false,
@@ -70,6 +75,12 @@ export default (state: PlantThresholdsState = initialState, action): PlantThresh
         ...state,
         loading: false,
         entity: action.payload.data
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_PLANT_BY_THRESHOLDS):
+      return {
+        ...state,
+        loading: false,
+        plant: action.payload.data
       };
     case SUCCESS(ACTION_TYPES.CREATE_PLANTTHRESHOLDS):
     case SUCCESS(ACTION_TYPES.UPDATE_PLANTTHRESHOLDS):
@@ -96,6 +107,7 @@ export default (state: PlantThresholdsState = initialState, action): PlantThresh
 };
 
 const apiUrl = 'api/plant-thresholds';
+const plantApiUrl = 'api/plants';
 
 // Actions
 
@@ -109,6 +121,14 @@ export const getEntity: ICrudGetAction<IPlantThresholds> = id => {
   return {
     type: ACTION_TYPES.FETCH_PLANTTHRESHOLDS,
     payload: axios.get<IPlantThresholds>(requestUrl)
+  };
+};
+
+export const getPlant: ICrudGetAction<IPlant> = id => {
+  const requestUrl = `${plantApiUrl}/thresholds/${id}`;
+  return {
+    type: ACTION_TYPES.FETCH_PLANT_BY_THRESHOLDS,
+    payload: axios.get<IPlant>(requestUrl)
   };
 };
 

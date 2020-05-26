@@ -58,6 +58,15 @@ export const Cases = props => (
       </NavItem>
     
     );
+
+  export const Thresholds = props => (
+    <NavItem>
+        <NavLink tag={Link} to="/plant-thresholds" className="d-flex align-items-center">
+          <FontAwesomeIcon icon="chart-line" />
+          <span>Thresholds</span>
+        </NavLink>
+      </NavItem>
+  );
   
 
 

@@ -3,7 +3,7 @@ import './header.scss';
 import React, { useState } from 'react';
 import { Navbar, Nav, NavbarToggler, Collapse } from 'reactstrap';
 import LoadingBar from 'react-redux-loading-bar';
-import { Home, Brand, Customers, Cases, Plants } from './header-components';
+import { Home, Brand, Customers, Cases, Plants, Thresholds } from './header-components';
 import { AdminMenu, EntitiesMenu, AccountMenu } from '../menus';
 
 export interface IHeaderProps {
@@ -45,6 +45,7 @@ const Header = (props: IHeaderProps) => {
             {props.isAuthenticated && props.isManager && <Customers/>}
             {props.isAuthenticated && props.isManager && <Plants/>}
             {props.isAuthenticated && props.isManager && <Cases/>}
+            {props.isAuthenticated && props.isManager && <Thresholds/>}
             {props.isAuthenticated && props.isAdmin && (
               <AdminMenu showSwagger={props.isSwaggerEnabled} showDatabase={!props.isInProduction} />
             )}
