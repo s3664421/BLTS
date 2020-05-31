@@ -1,4 +1,4 @@
-# JHipster-generated Kubernetes configuration
+
 
 ## Preparation
 
@@ -56,7 +56,6 @@ $ kubectl set image deployment/<app-name>-app <app-name>=<new-image>
 Using livenessProbes and readinessProbe allow you to tell Kubernetes about the state of your applications, in order to ensure availablity of your services. You will need minimum 2 replicas for every application deployment if you want to have zero-downtime deployed.
 This is because the rolling upgrade strategy first stops a running replica in order to place a new. Running only one replica, will cause a short downtime during upgrades.
 
-## JHipster registry
 
 The registry is deployed using a headless service in kubernetes, so the primary service has no IP address, and cannot get a node port. You can create a secondary service for any type, using:
 
@@ -75,17 +74,3 @@ For scaling the JHipster registry, use
 ```
 $ kubectl scale statefulset jhipster-registry --replicas 3
 ```
-
-## Troubleshooting
-
-> my apps doesn't get pulled, because of 'imagePullBackof'
-
-Check the docker registry your Kubernetes cluster is accessing. If you are using a private registry, you should add it to your namespace by `kubectl create secret docker-registry` (check the [docs](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/) for more info)
-
-> my applications are stopped, before they can boot up
-
-This can occur if your cluster has low resource (e.g. Minikube). Increase the `initialDelaySeconds` value of livenessProbe of your deployments
-
-> my applications are starting very slow, despite I have a cluster with many resources
-
-The default setting are optimized for middle-scale clusters. You are free to increase the JAVA_OPTS environment variable, and resource requests and limits to improve the performance. Be careful!
